@@ -7,6 +7,10 @@ export default defineWorkersConfig(async () => {
 
   return {
     test: {
+      name: "workers",
+      include: ["test/**/*.test.ts"],
+      // The architecture check needs Node; it runs in vitest.architecture.config.ts.
+      exclude: ["test/architecture/**", "node_modules/**"],
       setupFiles: ["./test/apply-migrations.ts"],
       poolOptions: {
         workers: {
