@@ -6,6 +6,7 @@
 |---|---|
 | [architecture.md](architecture.md) | Workers, request flow, repo layout, module pattern, ingest contract, cron |
 | [data-model.md](data-model.md) | D1 tables per module (draft) |
+| [roadmap.md](roadmap.md) | Every GitHub issue, its dependencies, and what can start now |
 | [workflow.md](workflow.md) | Issues → branches → PRs; the owner merges (agents: see `/AGENTS.md`) |
 | [development.md](development.md) | npm + Wrangler, local dev, tests in workerd, deploys |
 | [adr/](adr/) | Architecture Decision Records: one decision per file, never rewritten (supersede instead) |
