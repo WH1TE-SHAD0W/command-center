@@ -1,0 +1,67 @@
+---
+interface Props {
+  title: string;
+}
+const { title } = Astro.props;
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <title>{title} · command-center</title>
+  </head>
+  <body>
+    <header>
+      <span class="brand">command-center</span>
+    </header>
+    <main>
+      <slot />
+    </main>
+  </body>
+</html>
+
+<style is:global>
+  /* System fonts only: no external fonts, CDNs or analytics (context.md §6). */
+  :root {
+    --bg: #09090b;
+    --fg: #e4e4e7;
+    --muted: #a1a1aa;
+    --border: #27272a;
+    --ok: #4ade80;
+    --error: #f87171;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+    color-scheme: dark;
+  }
+  * {
+    box-sizing: border-box;
+  }
+  html,
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font-family: system-ui, sans-serif;
+    font-size: 16px;
+    line-height: 1.5;
+  }
+  header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .brand,
+  code,
+  .mono {
+    font-family: var(--mono);
+  }
+  main {
+    padding: 1.5rem;
+    max-width: 60rem;
+  }
+  :focus-visible {
+    outline: 2px solid var(--fg);
+    outline-offset: 2px;
+  }
+</style>
