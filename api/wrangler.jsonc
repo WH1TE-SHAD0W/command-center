@@ -1,0 +1,23 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "command-center-api",
+  "main": "src/worker.ts",
+  "compatibility_date": "2024-11-28",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": false,
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "command-center-db-local",
+      "database_id": "placeholder-d1-id"
+    }
+  ],
+  "r2_buckets": [
+    {
+      "binding": "FILES",
+      "bucket_name": "command-center-files-local"
+    }
+  ]
+}

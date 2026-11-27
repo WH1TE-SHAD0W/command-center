@@ -1,0 +1,12 @@
+{
+  "name": "command-center",
+  "private": true,
+  "workspaces": [
+    "api",
+    "web"
+  ],
+  "scripts": {
+    "typecheck": "npm run typecheck -w api",
+    "test": "npm test -w api"
+  }
+}
