@@ -23,10 +23,10 @@ džingel's.
 - `context.md` is human-owned intent. Edit it only when the human asks.
 - Never change `wrangler.jsonc` bindings or IDs, deploy, or apply remote D1 migrations unless the
   human explicitly asks.
-- Keep the architecture (ADRs 0010, 0011):
-  - **Data:** Drizzle with one schema file per module. Never edit an applied migration; generate a
-    new one in `api/migrations/<module>/`, review it, and re-run the collector. Never hand-edit
-    `api/d1-migrations/`.
+- Keep the architecture (ADRs 0010, 0011, 0013):
+  - **Data:** Drizzle with one schema file per module, combined into one shared instance
+    (`api/src/db.ts`). Never edit an applied migration; generate a new one into `api/migrations/`
+    with `npm run migrations:generate -w api` and review it. Never hand-edit `api/migrations/meta/`.
   - **Layout:** Laravel-style, split by type, one file per module. Services hold the logic and are
     the only place that queries; controllers, MCP tools, Actions, listeners and jobs only call them.
   - **Boundaries:** no module imports another module's files. Use events, and the architecture test

@@ -11,7 +11,7 @@
 ## Local dev
 ```
 npm install
-npm run migrate:local -w api   # wrangler d1 migrations apply command-center --local
+npm run migrate:local -w api   # wrangler d1 migrations apply DB --local (applies api/migrations/)
 npm run dev:api                # wrangler dev on :8787, local D1/R2 (Miniflare)
 npm run dev:web                # astro dev on :4321; Vite proxies /api → :8787
 ```
@@ -23,12 +23,23 @@ in `api/.dev.vars` (git-ignored), with a test that a missing JWT returns 401 whe
 To trigger the cron locally, run `npx wrangler dev --test-scheduled`, then
 `curl "http://localhost:8787/__scheduled?cron=*/5+*+*+*+*"`.
 
+## Schema changes (ADR 0013)
+1. Edit the module's schema file, `api/src/schema/<module>.ts` (a new module also gets one
+   `export * from "./<module>";` line in `api/src/schema/index.ts`).
+2. `npm run migrations:generate -w api -- --name <what_changed>` writes the next numbered
+   migration (`api/migrations/NNNN_<what_changed>.sql`) and updates `api/migrations/meta/`.
+3. Review the SQL, especially table recreations, which SQLite needs for column changes.
+4. `npm run migrate:local -w api` applies it to the local D1; tests apply it on their own.
+
+Never edit an applied migration or `api/migrations/meta/` by hand. If `main` gained a migration
+while your branch had one, drop yours (`npx -w api drizzle-kit drop`) and generate it again on top.
+
 ## Tests
 - `npm test -w api`: Vitest with `@cloudflare/vitest-pool-workers`. Tests run inside workerd against
   a local D1 with all migrations applied, call the worker's `fetch`/`scheduled` or `createApp`
   directly, and forge Access JWTs with a key generated in the test (`api/test/helpers/access.ts`).
   The synthetic `CLOUDFLARE_ACCESS_*` values live in `api/vitest.config.ts`; the certs fetch is
-  injected through `createApp({ auth: { fetch } })`, so tests never touch the network.
+  injected through `createApp(moduleList, { auth: { fetch } })`, so tests never touch the network.
 - `npm test -w web`: Vitest + happy-dom for page scripts (as in džingel).
 - One test per acceptance criterion; synthetic data only.
 

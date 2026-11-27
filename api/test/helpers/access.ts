@@ -63,3 +63,13 @@ export async function seedJwks(
 let counter = 0;
 /** A fresh synthetic team host per test, so tests never share KV cache entries. */
 export const uniqueHost = () => `team-${Date.now()}-${++counter}.example.test`;
+
+/**
+ * Headers with a valid synthetic Access JWT for the test team in `api/vitest.config.ts`. Seeds
+ * that team's JWKS in KV first, so the request never reaches out for the certs.
+ */
+export async function accessHeaders(kv: KVNamespace): Promise<Record<string, string>> {
+  const key = await makeKey(`kid-${uniqueHost()}`);
+  await seedJwks(kv, TEST_TEAM_DOMAIN, [key.publicJwk]);
+  return { "Cf-Access-Jwt-Assertion": await signToken(key) };
+}

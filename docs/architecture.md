@@ -57,11 +57,13 @@ after which ingest routes accept only `service` and UI routes only `owner`.
 ```
 package.json                  npm workspaces: api, web
 api/
-  wrangler.jsonc              DB, FILES, OAUTH_KV, queues, triggers.crons; migrations_dir = d1-migrations
-  migrations/<module>/        drizzle-kit output per module, timestamp names   (ADR 0010)
-  d1-migrations/              collected from migrations/*, what Wrangler applies; never hand-edited
+  wrangler.jsonc              DB, FILES, OAUTH_KV, queues, triggers.crons
+  drizzle.config.ts           the one drizzle-kit config: reads src/schema/*.ts   (ADR 0013)
+  migrations/                 drizzle-kit output, numbered (0000_<name>.sql); what Wrangler applies
+    meta/                     drizzle-kit's journal and snapshots; never hand-edited
   src/
     worker.ts                 fetch + scheduled + queue handlers; wires env
+    db.ts                     the one Drizzle instance: drizzle(env.DB, { schema })   (ADR 0013)
     app.ts                    createApp: middleware (Access JWT, deps) + router + /mcp
     routes.ts                 THE one router              ≈ routes/api.php
     modules.ts                explicit module list        ≈ bootstrap/providers.php
@@ -69,6 +71,7 @@ api/
     controllers/<m>.ts        HTTP usage only             ≈ Http/Controllers
     services/<m>.ts           the logic; only place that queries  ≈ Services / Actions
     schema/<m>.ts             Drizzle tables + relations  ≈ Models
+    schema/index.ts           re-exports every module's schema (the combined schema)
     validation/<m>.ts         zod from drizzle-zod        ≈ Http/Requests
     mcp/<m>.ts                MCP tools, usage only       ≈ Mcp/Tools
     events/                   typed event definitions     ≈ Events
@@ -93,7 +96,7 @@ web/
 
 **Files per module** (kitchen as the example): `schema/kitchen.ts`, `validation/kitchen.ts`,
 `services/kitchen.ts`, `controllers/kitchen.ts`, `mcp/kitchen.ts`, `enums/recipe-type.ts`,
-`migrations/kitchen/`, entries in `routes.ts` and `modules.ts`; web: `pages/kitchen/`,
+its migrations in `migrations/`, entries in `routes.ts`, `modules.ts` and `schema/index.ts`; web: `pages/kitchen/`,
 `actions/kitchen.ts`, `components/kitchen/`, `components/dashboard/kitchen.astro`.
 
 ## Module rules (ADR 0011)

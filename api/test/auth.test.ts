@@ -20,7 +20,7 @@ async function setup(opts: { keys?: TestKey[]; envOverrides?: Partial<Bindings> 
   const key = await makeKey("kid-1");
   const keys = opts.keys ?? [key];
   const certs = fakeCertsFetch(() => keys.map((k) => k.publicJwk));
-  const app = createApp({ auth: { fetch: certs.fetch } });
+  const app = createApp([], { auth: { fetch: certs.fetch } });
   const bindings: Bindings = {
     ...testEnv,
     CLOUDFLARE_ACCESS_TEAM_DOMAIN: host,
@@ -122,7 +122,7 @@ describe("#14 Validate the Cloudflare Access JWT on every API request", () => {
       expect((await first.request("/api/health", token)).status).toBe(200);
 
       const second = fakeCertsFetch(() => []);
-      const app = createApp({ auth: { fetch: second.fetch } });
+      const app = createApp([], { auth: { fetch: second.fetch } });
       const res = await app.request(
         "/api/health",
         { headers: { "Cf-Access-Jwt-Assertion": token } },
@@ -242,7 +242,7 @@ describe("#14 Validate the Cloudflare Access JWT on every API request", () => {
     it("returns 500 when the certs cannot be fetched", async () => {
       const host = uniqueHost();
       const key = await makeKey("kid-1");
-      const app = createApp({
+      const app = createApp([], {
         auth: { fetch: (async () => new Response("down", { status: 503 })) as typeof fetch },
       });
       const res = await app.request(
