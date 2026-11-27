@@ -10,5 +10,5 @@
       "@cloudflare/vitest-pool-workers"
     ]
   },
-  "include": ["src/**/*", "test/**/*"]
+  "include": ["src/**/*", "test/**/*", "drizzle.config.ts"]
 }
