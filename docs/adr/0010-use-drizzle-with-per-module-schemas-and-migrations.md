@@ -1,6 +1,7 @@
 # 0010. Use Drizzle, with a schema file and a migrations folder per module
 
-- **Status:** Accepted
+- **Status:** Accepted; the per-module migrations folders and the collector are superseded by
+  [0013](0013-generate-all-drizzle-migrations-into-one-folder.md)
 - **Date:** 2026-11-27
 - **Source:** Owner's decisions on 2026-11-27 (M0 "go with drizzle"; C1 "the db migrations could
   be split across, so it goes b"); `context/brainstorm-log.md` §7. Supersedes the "no ORM" part
