@@ -1,0 +1,20 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "command-center",
+  "main": "@astrojs/cloudflare/entrypoints/server",
+  "compatibility_date": "2026-11-20",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "assets": {
+    "binding": "ASSETS",
+    "directory": "./dist"
+  },
+  // The only way to the API. The web worker binds no D1 and no R2 (ADR 0005).
+  "services": [
+    {
+      "binding": "API",
+      "service": "command-center-api"
+    }
+  ]
+}
