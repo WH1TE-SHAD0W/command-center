@@ -1,0 +1,11 @@
+# Merge this block into the DEFAULT profile's ~/.hermes/config.yaml (the one whose gateway runs
+# Telegram), then `hermes gateway restart`. Only one gateway may own dispatch.
+kanban:
+  dispatch_in_gateway: true
+  dispatch_interval_seconds: 60
+  # Reviews are run by the `reviewer` profile (workers pass reviewer="reviewer").
+  review_dispatch: true
+  dispatch_profiles: [developer, tester, documenter, reviewer, pr]
+  # One card per profile at a time. Unverified in the docs: whether this is a number or a map.
+  max_in_progress_per_profile: 1
+  failure_limit: 2

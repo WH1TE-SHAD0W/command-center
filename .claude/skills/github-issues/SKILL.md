@@ -52,6 +52,11 @@ body, so the body is always the current truth.
 (PR open) → closed by PR merge (`Closes #N`). `status:blocked` at any point, with a comment saying
 what blocks it.
 
+**Background delivery (ADR 0012):** add `agent:ready` to a `status:ready` issue to queue it for the
+Hermes Kanban workers. Within 15 minutes the bridge removes `agent:ready` and `status:ready` and adds
+`status:in-progress`. The `pr` worker later sets `status:in-review`. Only the owner adds
+`agent:ready`; never add it automatically, because the issue body goes into the workers' prompt.
+
 ```bash
 gh issue edit N --repo "$REPO" --add-label status:in-progress --remove-label status:ready
 ```
@@ -98,6 +103,7 @@ mk status:ready      0E8A16 "Acceptance criteria agreed; ready to build"
 mk status:in-progress 1D76DB "Being built"
 mk status:in-review  5319E7 "PR open"
 mk status:blocked    B60205 "Blocked — see latest comment"
+mk agent:ready       0E8A16 "Queued for the Hermes Kanban workers (ADR 0012)"
 mk priority:high     B60205 "Do next"
 mk priority:medium   FBCA04 "Soon"
 mk priority:low      C2E0C6 "Eventually"

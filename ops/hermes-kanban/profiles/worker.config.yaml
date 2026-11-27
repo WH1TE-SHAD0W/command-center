@@ -1,0 +1,38 @@
+# Config for every command-center worker profile (developer, tester, documenter, reviewer, pr).
+# setup.sh fills the __PLACEHOLDERS__ and writes it to ~/.hermes/profiles/<role>/config.yaml.
+
+model:
+  # You said Flash 3.6. The Hermes Gemini guide lists gemini-3.7-flash, gemini-3.8-flash and
+  # gemini-flash-latest; if gemini-3.6-flash is refused, switch to one of those.
+  default: gemini-3.6-flash
+  provider: gemini
+  base_url: https://generativelanguage.googleapis.com/v1beta
+
+terminal:
+  backend: docker
+  docker_image: "command-center-worker:latest"
+  # Terminal, file and execute_code calls all run in this container (docker exec).
+  docker_run_as_host_user: true
+  docker_mount_cwd_to_workspace: false
+  docker_volumes:
+    # Repo clone + per-issue worktrees, at the same absolute path so the worktrees'
+    # .git pointers and $HERMES_KANBAN_WORKSPACE resolve inside the container.
+    - "__CC_ROOT__:__CC_ROOT__"
+    # Kanban attachments must be reachable from a Docker backend (Kanban docs).
+    - "__HERMES_HOME__/kanban/attachments:__HERMES_HOME__/kanban/attachments:ro"
+  __FORWARD_ENV__
+  docker_env:
+    GIT_AUTHOR_NAME: "hermes-worker"
+    GIT_AUTHOR_EMAIL: "__GIT_EMAIL__"
+    GIT_COMMITTER_NAME: "hermes-worker"
+    GIT_COMMITTER_EMAIL: "__GIT_EMAIL__"
+    HOME: "/tmp"
+    npm_config_cache: "__CC_ROOT__/.npm-cache"
+  # npm install and the pr profile's push need the network.
+  docker_network: true
+  container_memory: 4096
+  container_persistent: true
+
+skills:
+  external_dirs:
+    - "__SKILLS_DIR__"
