@@ -129,6 +129,19 @@
 | 7.3 | Details Claude added to ADRs 0010/0011: script `npm run migrations:collect -w api`; CI fails if `d1-migrations/` is stale; dependency-cruiser as the architecture test; a kind = one file plus one map entry; a failing widget shows an error card; the list of core shared files; the pre-Drizzle table sketches marked as outdated | "Keep them" (2026-11-27) | ADRs 0010, 0011 |
 | 7.4 | Details Claude added to ADRs 0005–0009: 0005 validates twice (Action zod, then the API, which is authoritative); 0007 has a test pinning the Access bypass list and the KV binding `OAUTH_KV`; 0008 uses keys `<module>/<uuid>.<ext>`, a fixed list of widths and Cache API caching; 0009 adds `archived_at` with restore, hides archived items by default, fails the build on `DELETE` outside documented prune jobs, and **allows pruning machine data (e.g. raw watchtower samples)** | "Keep them too" (2026-11-27) | ADRs 0005, 0007, 0008, 0009 |
 
+## 8. Handing over to Hermes (2026-11-27)
+
+| # | Question | Answer | Recorded in |
+|---|---|---|---|
+| P0 | Pause the brainstorm? | "can we have a pause and let hermes start with development?" | — |
+| P1 | What Hermes starts on | "everything we have right now" | issues (to be drafted) |
+| P2 | How Hermes takes work | "hermes loads an issue as a task, loads the context from the repo and does the job" | `AGENTS.md` |
+| P3 | Commit and branching | "put everything we have, all the docs, to main directly; add a branching strategy so a hermes agent knows how to do such stuff; each issue merged with a pr". Initial commit 7b9fca5 | `AGENTS.md`, `docs/workflow.md` |
+| P4 | Agent personas | "hermes can define the personas in the ui" | — |
+| P5 | How Hermes codes | "try to find out, never used it before". Found: its GitHub skill reads `AGENTS.md`, branches `feat/…`, Conventional Commits, `Closes #N`, watches CI, can merge but needn't | `AGENTS.md` |
+| B1–B7 | Branch names, commits, PR format, merge method, where it's written | "branching strategy sounds good, but the hermes agent needs to be able to use it" | `AGENTS.md`, `docs/workflow.md` |
+| B4 | Who merges | "I merge the stuff, hermes creates PRs" | `AGENTS.md` §3 |
+
 ## Still open (as of 2026-11-27)
 
 See `context.md` §8 for the live list. In short: M13 (cross-module links), the check-in format, kitchen

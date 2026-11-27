@@ -44,8 +44,10 @@ džingel's.
   `@cloudflare/vitest-pool-workers` (inside workerd, local D1, migrations applied). Synthetic
   fixtures only, never real habits, meals or check-ins.
 - Never claim tests pass without running them. Quote the summary line.
-- Work on a branch `<type>/<N>-<slug>`, never on `main`. Use Conventional Commits with `Refs #N`.
-  Stage only your own files. Never push, force-push or merge unless asked.
+- Follow `AGENTS.md` for the issue → branch → PR flow (`docs/workflow.md` is the owner's side).
+  Work on a branch `<type>/<N>-<slug>`, never on `main`. Use Conventional Commits with `Refs #N`.
+  Stage only your own files. Push your own issue branch and open its PR; **never merge**, never push
+  to `main`, never force-push. The owner merges.
 
 ## Privacy & security
 - Personal data (reflections, habits, meals, travel) never goes in logs, errors, fixtures, issues
