@@ -11,7 +11,7 @@
 ## Local dev
 ```
 npm install
-npm run migrate:local -w api   # wrangler d1 migrations apply command-center --local
+npm run migrate:local -w api   # wrangler d1 migrations apply DB --local (applies api/migrations/)
 npm run dev:api                # wrangler dev on :8787, local D1/R2 (Miniflare)
 npm run dev:web                # astro dev on :4321; Vite proxies /api → :8787
 ```
@@ -21,6 +21,17 @@ production, and a test asserts that a missing JWT returns 401 when it is unset.
 
 To trigger the cron locally, run `npx wrangler dev --test-scheduled`, then
 `curl "http://localhost:8787/__scheduled?cron=*/5+*+*+*+*"`.
+
+## Schema changes (ADR 0013)
+1. Edit the module's schema file, `api/src/schema/<module>.ts` (a new module also gets one
+   `export * from "./<module>";` line in `api/src/schema/index.ts`).
+2. `npm run migrations:generate -w api -- --name <what_changed>` writes the next numbered
+   migration (`api/migrations/NNNN_<what_changed>.sql`) and updates `api/migrations/meta/`.
+3. Review the SQL, especially table recreations, which SQLite needs for column changes.
+4. `npm run migrate:local -w api` applies it to the local D1; tests apply it on their own.
+
+Never edit an applied migration or `api/migrations/meta/` by hand. If `main` gained a migration
+while your branch had one, drop yours (`npx -w api drizzle-kit drop`) and generate it again on top.
 
 ## Tests
 - `npm test -w api`: Vitest with `@cloudflare/vitest-pool-workers`. Tests run inside workerd against

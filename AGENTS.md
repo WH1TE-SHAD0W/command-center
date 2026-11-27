@@ -80,7 +80,7 @@ Closes #<N>
   create or delete Cloudflare resources.
 - Never delete data or files that hold records. Archive instead (ADR 0009). No `DELETE` in module
   SQL outside the documented prune jobs.
-- Never edit an applied migration or `api/d1-migrations/` by hand (ADR 0010).
+- Never edit an applied migration or `api/migrations/meta/` by hand (ADR 0013).
 - **The repository is public.** No secrets, tokens or real personal data (habits, check-ins,
   recipes, names) in code, fixtures, commits, issues or PRs. Use synthetic data only.
 - Never weaken a test or a check to get CI green. If a check is wrong, say so in the PR.
@@ -94,7 +94,7 @@ you are working on defines them.
 npm ci
 npm run typecheck -w api && npm run typecheck -w web
 npm test -w api && npm test -w web
-npm run migrations:collect -w api && git diff --exit-code api/d1-migrations   # collected copy is up to date
+npm run migrations:generate -w api && git status --porcelain api/migrations   # must print nothing: schema and migrations agree
 npm run build -w web
 ```
 
