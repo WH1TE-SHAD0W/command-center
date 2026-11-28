@@ -19,5 +19,11 @@
       "binding": "FILES",
       "bucket_name": "command-center-files-local"
     }
+  ],
+  "kv_namespaces": [
+    {
+      "binding": "OAUTH_KV",
+      "id": "placeholder-kv-id"
+    }
   ]
 }

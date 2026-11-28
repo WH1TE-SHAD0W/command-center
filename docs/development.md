@@ -15,9 +15,10 @@ npm run migrate:local -w api   # wrangler d1 migrations apply DB --local (applie
 npm run dev:api                # wrangler dev on :8787, local D1/R2 (Miniflare)
 npm run dev:web                # astro dev on :4321; Vite proxies /api → :8787
 ```
-Locally there is no Cloudflare Access. In dev, `auth.ts` accepts a fixed owner actor **only when**
-`ENVIRONMENT=development` is set in `api/.dev.vars` (git-ignored). That variable is never set in
-production, and a test asserts that a missing JWT returns 401 when it is unset.
+Locally there is no Cloudflare Access, and every API route except the ADR 0007 machine paths
+returns `401` without a valid `Cf-Access-Jwt-Assertion` header. Planned, not built yet: a dev-only
+bypass in `auth.ts` that accepts a fixed owner actor **only when** `ENVIRONMENT=development` is set
+in `api/.dev.vars` (git-ignored), with a test that a missing JWT returns 401 when it is unset.
 
 To trigger the cron locally, run `npx wrangler dev --test-scheduled`, then
 `curl "http://localhost:8787/__scheduled?cron=*/5+*+*+*+*"`.
@@ -36,7 +37,9 @@ while your branch had one, drop yours (`npx -w api drizzle-kit drop`) and genera
 ## Tests
 - `npm test -w api`: Vitest with `@cloudflare/vitest-pool-workers`. Tests run inside workerd against
   a local D1 with all migrations applied, call the worker's `fetch`/`scheduled` or `createApp`
-  directly, and forge Access JWTs with a test key.
+  directly, and forge Access JWTs with a key generated in the test (`api/test/helpers/access.ts`).
+  The synthetic `CLOUDFLARE_ACCESS_*` values live in `api/vitest.config.ts`; the certs fetch is
+  injected through `createApp(moduleList, { auth: { fetch } })`, so tests never touch the network.
 - `npm test -w web`: Vitest + happy-dom for page scripts (as in džingel).
 - One test per acceptance criterion; synthetic data only.
 
@@ -46,5 +49,6 @@ while your branch had one, drop yours (`npx -w api drizzle-kit drop`) and genera
   - `command-center` (root `web/`): `astro build`, then `wrangler deploy`.
 - GitHub Actions (`.github/workflows/ci.yml`): `npm ci`, typecheck, tests, web build. It holds no
   Cloudflare secrets.
-- Secrets and vars (`ACCESS_AUD`, `ACCESS_TEAM_DOMAIN`, the alert channel token) go in with
-  `wrangler secret put`, never in the repo.
+- Secrets and vars (`CLOUDFLARE_ACCESS_AUD`, `CLOUDFLARE_ACCESS_TEAM_DOMAIN`, the alert channel
+  token) go in with `wrangler secret put`, never in the repo. The team domain is the host, such as
+  `<team>.cloudflareaccess.com` (`https://` and a trailing slash are accepted).

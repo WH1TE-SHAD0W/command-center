@@ -11,7 +11,7 @@
 | Cloudflare Queues | on the API worker | Background jobs (ADR 0011); free plan: 10,000 operations a day, 24-hour retention |
 | D1 `command-center` | binding `DB` | All structured data, accessed through Drizzle; tables prefixed per module (ADR 0010) |
 | R2 bucket | binding `FILES` on the API worker | Recipe photos. **Private**; served at `/img/<key>` and resized with the Images binding (ADR 0008). Instagram media stays in the existing `img.lynxmedia.ie` bucket, owned by Hermes |
-| KV namespace | binding `OAUTH_KV` on the API worker | OAuth state for `workers-oauth-provider` (ADR 0007) |
+| KV namespace | binding `OAUTH_KV` on the API worker | The app's one shared KV namespace: OAuth state for `workers-oauth-provider` (ADR 0007) and the Access JWKS cache (`access:jwks:<host>`). Any module may use it for cache-like state under its own key prefix. The API keeps no state in isolate memory: **KV is the memory, D1 is the data** |
 | Cron Trigger | on the API worker | External health checks every 5 min; daily pruning |
 | Cloudflare Access app | `app.culak.eu` | Owner login and service tokens for machine clients |
 | LAN probe | home lab | Checks `172.16.x.x` services and pushes results |
@@ -40,10 +40,17 @@ LAN probe
   └─▶ POST .../api/ingest/checks with an Access service token  (to be revisited in the watchtower section)
 ```
 
-The API re-validates the `Cf-Access-Jwt-Assertion` header (signature, `aud`, issuer) on every
-request using `@hono/cloudflare-access` or a small `jose` check. It then sets
-`c.get("actor")` to `{ kind: "owner" | "service", id }`. Ingest routes accept only `service`; UI
-routes accept only `owner`.
+The API re-validates the `Cf-Access-Jwt-Assertion` header on every request (`accessAuth` in
+`api/src/auth.ts`, using `jose`). It checks the RS256 signature against the team's JWKS, `aud`
+(`CLOUDFLARE_ACCESS_AUD`), the issuer `https://<CLOUDFLARE_ACCESS_TEAM_DOMAIN>` and expiry, then
+sets `c.var.accessJwt` to the verified claims. A missing or invalid token gets `401`; missing
+configuration fails closed with `500`. The JWKS is cached in `OAUTH_KV` for an hour and refetched
+from `https://<team>/cdn-cgi/access/certs` on a miss, or when a token names an unknown `kid` (key
+rotation, at most every 30 s). Only the ADR 0007 machine paths skip the check: exactly `/mcp`,
+`/token` and `/register`, anything under `/.well-known/oauth-`, and `/uploads/<one segment>`.
+
+Planned, not built yet: mapping the claims to `c.var.actor` (`{ kind: "owner" | "service", id }`),
+after which ingest routes accept only `service` and UI routes only `owner`.
 
 ## Repository layout (ADR 0011, Laravel-style: split by type, one file per module)
 
@@ -60,7 +67,7 @@ api/
     app.ts                    createApp: middleware (Access JWT, deps) + router + /mcp
     routes.ts                 THE one router              ≈ routes/api.php
     modules.ts                explicit module list        ≈ bootstrap/providers.php
-    auth.ts                   Access JWT middleware, actor type
+    auth.ts                   Access JWT middleware, bypass list, JWKS cache in KV
     controllers/<m>.ts        HTTP usage only             ≈ Http/Controllers
     services/<m>.ts           the logic; only place that queries  ≈ Services / Actions
     schema/<m>.ts             Drizzle tables + relations  ≈ Models

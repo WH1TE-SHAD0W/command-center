@@ -15,7 +15,14 @@ export default defineWorkersConfig(async () => {
       poolOptions: {
         workers: {
           wrangler: { configPath: "./wrangler.jsonc" },
-          miniflare: { bindings: { TEST_MIGRATIONS: migrations } },
+          miniflare: {
+            bindings: {
+              TEST_MIGRATIONS: migrations,
+              // Synthetic Access settings for tests only. Real values are set on the deployed worker.
+              CLOUDFLARE_ACCESS_TEAM_DOMAIN: "synthetic-team.example.test",
+              CLOUDFLARE_ACCESS_AUD: "synthetic-aud-tag",
+            },
+          },
         },
       },
     },
