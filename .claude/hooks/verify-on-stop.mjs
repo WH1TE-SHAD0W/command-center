@@ -33,20 +33,23 @@ const apiChanged = files.some((f) => f.startsWith("api/"));
 if (!apiChanged) process.exit(0);
 
 const MOCKER_ERROR = "getMockerRegistry(...).getById is not a function";
-const warnings = [];
+let blocked = "";
 const checks = [["typecheck (api)", "npm run -s typecheck -w api"]];
 try {
   const pkg = JSON.parse(readFileSync(join(root, "api", "package.json"), "utf8"));
   if (pkg.scripts?.test) {
     const trap = foreignMocker(root);
     if (trap) {
-      warnings.push(
-        `Stop hook: api tests NOT run in ${root}. This checkout sits inside another checkout, and ` +
-          `\`@vitest/mocker\` resolves from the outer one (${trap}), so inside workerd every test ` +
-          `fails with "${MOCKER_ERROR}". That is the environment, not the code. Run the tests in a ` +
-          `checkout outside the repository (e.g. \`git worktree add ../command-center-<N>\`), or ` +
-          `report them as unverified.`,
-      );
+      // Hooks are walls, not warnings: block this stop once (stop_hook_active lets the next one
+      // through) so the agent must state in its report that the tests are unverified.
+      blocked =
+        `Verification blocked — api tests NOT run in ${root}. This checkout sits inside another ` +
+        `checkout, and \`@vitest/mocker\` resolves from the outer one (${trap}), so inside workerd ` +
+        `every test would fail with "${MOCKER_ERROR}". That is the environment, not the code: do not ` +
+        `change code to fix it. Either run the tests in a checkout outside the repository ` +
+        `(\`git worktree add --detach <path outside the repo> HEAD\`, then \`npm ci\` and ` +
+        `\`npm test -w api -- --run\` there) and quote the summary line, or say plainly in your ` +
+        `report that the api tests are unverified and why.\n`;
     } else {
       checks.push(["tests (api)", "npm test -s -w api -- --run"]);
     }
@@ -70,7 +73,10 @@ for (const [name, cmd] of checks) {
     process.exit(2);
   }
 }
-if (warnings.length) process.stdout.write(JSON.stringify({ systemMessage: warnings.join("\n") }));
+if (blocked) {
+  process.stderr.write(blocked);
+  process.exit(2);
+}
 process.exit(0);
 
 // Walks up from api/ the way Node resolves a bare `@vitest/mocker` import. Returns the package
