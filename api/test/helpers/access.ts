@@ -8,6 +8,8 @@ import { jwksCacheKey } from "../../src/auth";
 
 export const TEST_AUD = "synthetic-aud-tag";
 export const TEST_TEAM_DOMAIN = "synthetic-team.example.test";
+/** The synthetic owner's Access `sub` claim. */
+export const TEST_SUB = "synthetic-owner-sub";
 
 export interface TestKey {
   kid: string;
@@ -31,7 +33,7 @@ export interface TokenOptions {
 
 export function signToken(key: TestKey, opts: TokenOptions = {}) {
   const host = opts.host ?? TEST_TEAM_DOMAIN;
-  return new SignJWT({ email: "owner@example.test", ...opts.claims })
+  return new SignJWT({ sub: TEST_SUB, email: "owner@example.test", ...opts.claims })
     .setProtectedHeader({ alg: "RS256", kid: key.kid })
     .setIssuer(opts.issuer ?? `https://${host}`)
     .setAudience(opts.audience ?? TEST_AUD)

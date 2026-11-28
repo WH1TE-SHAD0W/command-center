@@ -11,7 +11,7 @@ export default defineWorkersConfig(async () => {
       include: ["test/**/*.test.ts"],
       // The architecture check needs Node; it runs in vitest.architecture.config.ts.
       exclude: ["test/architecture/**", "node_modules/**"],
-      setupFiles: ["./test/apply-migrations.ts"],
+      setupFiles: ["./test/quiet-import-warnings.ts", "./test/apply-migrations.ts"],
       poolOptions: {
         workers: {
           wrangler: { configPath: "./wrangler.jsonc" },
