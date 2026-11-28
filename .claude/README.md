@@ -14,6 +14,7 @@ Translated from the Copilot structure of the *AI Agent Engineering Workshop* (`.
 | `.github/agents/reviewer.agent.md` | `agents/reviewer.md` | No Edit/Write + read-only shell hook |
 | `.github/agents/feature-builder.agent.md` | `agents/feature-builder.md` + `skills/build-feature` | `tools: Agent(...)` works when run as main agent; the skill runs the same loop from any session |
 | *(new)* | `agents/issue-manager.md` + `skills/github-issues`, `skills/ticket` | The only agent that writes to GitHub Issues |
+| *(new)* | `agents/factory-steward.md` + `skills/retro` | The learning loop (ADR 0014): Lessons → `factory:lesson` issues → fix PRs |
 | `github-issues-readonly` / `github-repos-readonly` MCP | `gh` CLI + `hooks/bash-guard.mjs gh-readonly` | Read-only enforced per agent in frontmatter `hooks:` |
 | `.github/skills/adr` | `skills/adr` | |
 | `.github/skills/git-commit` | `skills/git-commit` | `/git-commit` |
@@ -45,4 +46,5 @@ docs/                         how it works + ADRs
 1. `/ticket search across all my groups` → issue-manager drafts → you approve → issue filed.
 2. `/build-feature 12` → gather → developer → tester → documenter → reviewer → report.
    (Or `claude --agent feature-builder` and give it the issue number.)
-3. `/git-commit 12` → `/git-pr-summary 12` → PR with `Closes #12`.
+3. `/git-commit 12` → `/git-pr-summary 12` → PR with `Closes #12` and a **Lessons** section.
+4. When a roadmap wave closes: `/retro <wave>` → lessons filed → you approve → steward fix PRs.

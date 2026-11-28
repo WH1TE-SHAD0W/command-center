@@ -191,3 +191,12 @@ Access, with the `API` service binding. The API worker has `CLOUDFLARE_ACCESS_TE
 
 Update it when an issue closes, a new issue is filed, or a "Depends on" line changes. The issue
 always wins over this page.
+
+When every issue of a wave is closed, run `/retro <wave>` (ADR 0014): the factory learns from that
+wave's PRs, and the run is recorded below.
+
+### Retros
+
+| Wave | Date | Lesson issues |
+|---|---|---|
+| — | — | none yet; the first retro covers waves 0–2 |
