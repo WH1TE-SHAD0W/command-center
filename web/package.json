@@ -9,7 +9,8 @@
     "preview": "astro preview",
     "typecheck": "astro check",
     "test": "vitest",
-    "types": "wrangler types --include-runtime=false"
+    "types": "wrangler types --include-runtime=false",
+    "deploy": "wrangler deploy"
   },
   "devDependencies": {
     "@astrojs/check": "^0.9.12",
