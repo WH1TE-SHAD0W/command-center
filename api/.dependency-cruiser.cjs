@@ -3,8 +3,8 @@
 //
 // A module "<m>" owns `src/<folder>/<m>.ts` and anything under `src/<folder>/<m>/`
 // for each folder below. Core files (app.ts, routes.ts, modules.ts, events/,
-// enums/) are not module folders, so modules may import them and they may import
-// modules.
+// enums/, and schema/index.ts, the combined schema of ADR 0013) are not module
+// files, so modules may import them and they may import modules.
 
 const MODULE_FOLDERS = "(?:controllers|services|schema|mcp|listeners|validation)";
 
@@ -17,7 +17,11 @@ module.exports = {
         "A module's files must not import another module's files (ADR 0011 rule 3). " +
         "Talk through events/ instead, or move shared code to a core file.",
       severity: "error",
-      from: { path: `(?:^|/)src/${MODULE_FOLDERS}/([^/.]+)` },
+      from: {
+        path: `(?:^|/)src/${MODULE_FOLDERS}/([^/.]+)`,
+        // The combined schema re-exports every module's schema file (ADR 0013).
+        pathNot: "(?:^|/)src/schema/index\\.ts$",
+      },
       to: {
         path: `(?:^|/)src/${MODULE_FOLDERS}/`,
         pathNot: `(?:^|/)src/${MODULE_FOLDERS}/$1(?:[./]|$)`,
