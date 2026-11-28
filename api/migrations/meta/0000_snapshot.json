@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "07aff9fa-63cc-4f74-b592-0b2dc189c6b3",
+  "id": "7bc86561-d500-4bef-8a99-3c4e990f2cad",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "kitchen_recipe_photos": {
@@ -177,13 +177,14 @@
         }
       },
       "indexes": {
-        "kitchen_recipes_name_variant_unique": {
-          "name": "kitchen_recipes_name_variant_unique",
+        "kitchen_recipes_name_variant_active_unique": {
+          "name": "kitchen_recipes_name_variant_active_unique",
           "columns": [
             "name_normalized",
             "variant"
           ],
-          "isUnique": true
+          "isUnique": true,
+          "where": "\"kitchen_recipes\".\"archived_at\" is null"
         }
       },
       "foreignKeys": {},

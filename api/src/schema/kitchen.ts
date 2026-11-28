@@ -1,3 +1,4 @@
+import { isNull } from "drizzle-orm";
 import { index, integer, sqliteTable, text, uniqueIndex } from "drizzle-orm/sqlite-core";
 import type { RecipeTag } from "../enums/recipe-tag";
 import type { RecipeType } from "../enums/recipe-type";
@@ -58,8 +59,13 @@ export const kitchenRecipes = sqliteTable(
       .$defaultFn(() => new Date())
       .$onUpdateFn(() => new Date()),
   },
-  // One recipe per dish and variant (owner's decision on #17, 2026-11-28).
-  (t) => [uniqueIndex("kitchen_recipes_name_variant_unique").on(t.nameNormalized, t.variant)],
+  // One active recipe per dish and variant (owner's decisions on #17 and #18, 2026-11-28): an
+  // archived recipe does not block a new one with the same name and variant.
+  (t) => [
+    uniqueIndex("kitchen_recipes_name_variant_active_unique")
+      .on(t.nameNormalized, t.variant)
+      .where(isNull(t.archivedAt)),
+  ],
 );
 
 /** Photos of a recipe; the image itself lives in the private R2 bucket under `r2Key` (ADR 0008). */

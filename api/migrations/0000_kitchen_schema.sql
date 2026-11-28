@@ -25,4 +25,4 @@ CREATE TABLE `kitchen_recipes` (
 	`updated_at` integer NOT NULL
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `kitchen_recipes_name_variant_unique` ON `kitchen_recipes` (`name_normalized`,`variant`);
+CREATE UNIQUE INDEX `kitchen_recipes_name_variant_active_unique` ON `kitchen_recipes` (`name_normalized`,`variant`) WHERE "kitchen_recipes"."archived_at" is null;

@@ -153,6 +153,26 @@ describe("#17 kitchen schema and its first migration", () => {
     ).toMatch(/UNIQUE constraint failed: kitchen_recipes\.name_normalized, kitchen_recipes\.variant/);
   });
 
+  it("AC1: an archived recipe does not block a new one with the same name and variant (#18)", async () => {
+    const recipe = syntheticRecipe("Rearchived");
+    const [first] = await db.insert(kitchenRecipes).values(recipe).returning();
+    await db
+      .update(kitchenRecipes)
+      .set({ archivedAt: new Date("2026-01-01T12:00:00Z") })
+      .where(eq(kitchenRecipes.id, first.id));
+
+    const [second] = await db.insert(kitchenRecipes).values(recipe).returning();
+
+    expect(second.id).not.toBe(first.id);
+    expect(second.archivedAt).toBeNull();
+    // Restoring the archived one would make two active originals, so the database refuses it.
+    expect(
+      await constraintError(
+        db.update(kitchenRecipes).set({ archivedAt: null }).where(eq(kitchenRecipes.id, first.id)),
+      ),
+    ).toMatch(/UNIQUE constraint failed: kitchen_recipes\.name_normalized, kitchen_recipes\.variant/);
+  });
+
   it("AC2: kitchen_recipe_photos has id, recipe id, R2 key, archived_at and created_at", async () => {
     expect(await columns("kitchen_recipe_photos")).toEqual({
       id: { type: "TEXT", notnull: 1, pk: 1 },
