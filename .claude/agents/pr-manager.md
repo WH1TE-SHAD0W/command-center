@@ -42,6 +42,8 @@ docs or issues. Your output is one open PR and its URL.
    temp directory (your Write tool is limited to it):
    - **What:** 1–2 sentences. One `Closes #N` line per issue the branch delivers.
    - **Tests:** the tester's summary line, verbatim. Never invent or round it.
+   - **Lessons:** every lesson the supervisor passed from the specialists' reports, or "none"
+     (ADR 0014). Never leave the section out.
    - **Checklist:** tick only what the reports confirm.
    - Optional `## Notes`: at most 3 bullets (reviewer nits, open decisions).
    - Last line: `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.

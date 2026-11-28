@@ -66,6 +66,8 @@ gh issue comment <N> --body "PR: <url>, CI: <green|red, why>"
 ## Risk           what could break; migrations generated (yes/no, reviewed?)
 ## Exclusions     what you deliberately did not do
 ## Questions      open points for the owner (or "none")
+## Lessons        what the factory should learn (or "none"): retries, re-asked questions,
+                  wrong assumptions, hook/CI/tool friction, and the fix you would suggest
 
 Closes #<N>
 ```
@@ -101,7 +103,17 @@ npm run build -w web
 - There must be at least one test per acceptance criterion. Quote the real summary line in the PR,
   and never claim a pass you didn't see.
 
-## 5. Where code goes
+## 5. The learning loop (ADR 0014)
+
+- Fill **Lessons** honestly in every PR. Describe the mechanism, never personal data. "none" is
+  fine when nothing went wrong; habitual "none" is not.
+- When every issue of a wave in `docs/roadmap.md` is closed, a session runs `/retro <wave>`.
+  `factory-steward` turns the Lessons into `factory:lesson` issues; the owner approves them
+  (`status:ready`); the steward fixes each one in its own PR, preferring a hook, test or CI check
+  over more text. The owner merges.
+- Never fix a factory problem inside a feature PR. Put it under Lessons instead.
+
+## 6. Where code goes
 
 Follow `docs/architecture.md`: the Laravel-style layout, split by type, one file per module.
 Services hold the logic; controllers, MCP tools, Actions, listeners and jobs only call services. No

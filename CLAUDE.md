@@ -19,7 +19,9 @@ džingel's.
 ## Boundaries
 - Application code: `api/src/`, `api/migrations/`, `web/src/`, `web/worker/` (owned by `developer`).
   Tests: `**/*.test.ts`, `api/test/`, `web/test/` (owned by `tester`). Docs: `docs/` (owned by
-  `documenter`).
+  `documenter`). Factory files: `CLAUDE.md`, `AGENTS.md`, `.claude/`, `.github/workflows/`,
+  `.github/ISSUE_TEMPLATE/`, `ops/hermes-kanban/` (owned by `factory-steward`, through approved
+  `factory:lesson` issues, ADR 0014).
 - `context.md` is human-owned intent. Edit it only when the human asks.
 - Never change `wrangler.jsonc` bindings or IDs, deploy, or apply remote D1 migrations unless the
   human explicitly asks.
