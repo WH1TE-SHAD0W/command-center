@@ -1,0 +1,101 @@
+# Verifies every PR and every push to main. It only checks: it holds no Cloudflare secrets and never
+# deploys (Cloudflare Workers Builds deploys on push to main; ADR 0001, context.md §3).
+# Each job name below is a check you can mark as required, so keep the names stable.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Read the repository, nothing else.
+permissions:
+  contents: read
+
+# A newer push to the same branch or PR cancels the run still in progress.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  # Wrangler telemetry off; there is no Cloudflare account or token in this workflow.
+  WRANGLER_SEND_METRICS: "false"
+
+jobs:
+  typecheck:
+    name: typecheck
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck -w api
+      - run: npm run typecheck -w web
+
+  test:
+    name: test
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # --run: run once, never watch.
+      - name: API tests (workerd, local D1)
+        run: npm test -w api -- --run --project workers
+      - name: Web tests
+        run: npm test -w web -- --run
+
+  architecture:
+    name: architecture
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - name: Module boundaries (dependency-cruiser)
+        run: npm test -w api -- --run --project architecture
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      - run: npm run build -w web
+
+  cloudflare-build:
+    name: cloudflare-build
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+      - run: npm ci
+      # --dry-run bundles each worker the way Workers Builds would and uploads nothing.
+      - name: Bundle the API worker (dry run)
+        working-directory: api
+        run: npx wrangler deploy --dry-run
+      - run: npm run build -w web
+      - name: Bundle the web worker (dry run)
+        working-directory: web
+        run: npx wrangler deploy --dry-run

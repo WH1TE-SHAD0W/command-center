@@ -5,6 +5,9 @@
     "api",
     "web"
   ],
+  "engines": {
+    "node": ">=26"
+  },
   "scripts": {
     "typecheck": "npm run typecheck -w api",
     "test": "npm test -w api",
