@@ -104,8 +104,10 @@ exist, so let its first build succeed before connecting the web worker.
 The repository is an npm workspace with one `package-lock.json` at the top, and the Workers Builds
 docs do not say whether their automatic install finds it when the root directory is `api/` or `web/`.
 The build commands therefore run `npm ci` from the repository root themselves, and
-`SKIP_DEPENDENCY_INSTALL=1` turns the automatic install off so nothing is installed twice. Build
-variables exist only during the build, not at runtime.
+`SKIP_DEPENDENCY_INSTALL=1` turns the automatic install off so nothing is installed twice. Because
+this monorepo behaviour is undocumented, read each worker's first build log once: it should show no
+automatic install step and exactly one `npm ci`, run at the repository root. Build variables exist
+only during the build, not at runtime.
 
 **4. Set the API's Access variables** on `command-center-api`:
 - `CLOUDFLARE_ACCESS_TEAM_DOMAIN`: the team host, such as `<team>.cloudflareaccess.com` (`https://`
