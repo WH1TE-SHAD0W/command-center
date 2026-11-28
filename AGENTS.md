@@ -107,6 +107,9 @@ npm run build -w web
   (`it("KIT-005 AC2: …")`), and the PR sets those requirements to `implemented` in the spec. The
   spec traceability test fails otherwise. Quote the real summary line in the PR, and never claim a
   pass you didn't see.
+- The same PR updates the public docs (FAC-005): the `README.md` capability list for every
+  requirement it implements, the module's page in `docs/guide/`, the quick start if running
+  changed, and `docs/roadmap.md` for every issue it closes, files or re-links.
 
 ## 5. The learning loop (ADR 0014)
 

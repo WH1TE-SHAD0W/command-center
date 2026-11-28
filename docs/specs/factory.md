@@ -49,7 +49,7 @@ end are the factory's promises, at the level you would show a customer.
 | `developer` | 3 | `api/src/`, `api/migrations/`, `web/src/`, `web/worker/`; the status line of delivered requirements | GitHub read-only; never pushes |
 | `tester` | 4 | tests | never fixes code; synthetic data only |
 | `reviewer` | 5 | nothing | read-only shell; blocks on spec mismatch, stale docs or a broken rule |
-| `documenter` | 6 | `docs/` except `docs/specs/` | read-only shell apart from committing docs |
+| `documenter` | 6 | `docs/` except `docs/specs/`, and the root `README.md` | read-only shell apart from committing docs |
 | `pr-manager` | 7 | the PR (push + create) | runs only after the reviewer approves; never merges |
 | `pr-reviewer` | 7 | one verification comment on the PR | read-only otherwise |
 | `feature-builder` | 2–7 | nothing | supervisor: delegates every step, cannot edit |
@@ -80,34 +80,39 @@ end are the factory's promises, at the level you would show a customer.
 ## Requirements
 
 ### FAC-001 Every change is specified before it is built
-- **Status:** accepted
+- **Status:** implemented
+- **Delivered by:** #94
 - **Acceptance:**
   1. New or changed behaviour exists first as numbered requirements in a module spec, approved by
      the owner.
   2. Work starts only from an issue that cites approved requirements with no open questions.
 
 ### FAC-002 Every requirement is proven by a test
-- **Status:** accepted
+- **Status:** implemented
+- **Delivered by:** #94
 - **Acceptance:**
   1. Each delivered requirement has at least one test that names it.
   2. CI fails when a delivered requirement has no test, or a test names a requirement that doesn't
      exist or isn't delivered.
 
 ### FAC-003 Every change is reviewed against its spec before the owner sees it
-- **Status:** accepted
+- **Status:** implemented
+- **Delivered by:** #94
 - **Acceptance:**
   1. A separate review agent checks each change against the requirements it cites, the security and
      privacy rules, and the docs, and blocks it when anything is missing or extra.
   2. The PR states which requirement each test proves.
 
 ### FAC-004 The owner decides and merges; agents implement
-- **Status:** accepted
+- **Status:** implemented
+- **Delivered by:** #94
 - **Acceptance:**
   1. Every design decision is the owner's; an agent asks with numbered options instead of guessing.
   2. No agent merges, deploys, or changes infrastructure settings on its own.
 
 ### FAC-005 The public docs always describe the app as it is today
-- **Status:** accepted
+- **Status:** implemented
+- **Delivered by:** #94
 - **Acceptance:**
   1. The README lists everything the app can do today, by module and requirement, and links to the
      guide, the roadmap and the specs.
@@ -118,7 +123,8 @@ end are the factory's promises, at the level you would show a customer.
      README.
 
 ### FAC-006 The factory learns after every phase
-- **Status:** accepted
+- **Status:** implemented
+- **Delivered by:** #94
 - **Acceptance:**
   1. Every PR records its lessons.
   2. When a roadmap wave closes, the delivered work is re-checked against the specs, and the
@@ -127,12 +133,14 @@ end are the factory's promises, at the level you would show a customer.
      preferring an automatic check over more instructions.
 
 ### FAC-007 Personal data never enters the repository
-- **Status:** accepted
+- **Status:** implemented
+- **Delivered by:** #94
 - **Acceptance:**
   1. Specs, tests, fixtures, issues, PRs, lessons and logs use synthetic data only.
 
 ### FAC-008 The whole factory is described in one place
-- **Status:** accepted
+- **Status:** implemented
+- **Delivered by:** #94
 - **Acceptance:**
   1. Every agent, skill, hook and rule in `.claude/` is described in this file, and a test fails when
      one is missing.

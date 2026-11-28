@@ -44,6 +44,9 @@ requirement text (only Status and Delivered by). BLOCK otherwise.
 edited migrations; no ORM/new DB (ADR 0001, 0002).
 **Accessibility** (`.claude/rules/web.md`) — labels, focus, keyboard, contrast for UI changes.
 **Docs** — `docs/` updated; ADR present when a constraining decision was made.
+**Public docs** (FAC-005) — the README lists every requirement the PR sets to `implemented`; the
+guide covers what changed for the owner, and the quick start how to run it; `docs/roadmap.md`
+reflects every issue the PR closes, files or re-links. BLOCK when any is stale.
 
 ## Report format
 ```

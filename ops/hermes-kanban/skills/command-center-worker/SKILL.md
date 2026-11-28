@@ -48,7 +48,8 @@ line. If tests fail because of the code, commit the tests and
 with `kanban_request_review(reviewer="reviewer", summary="<tests added; summary line>")`.
 
 ## documenter
-Update `docs/` only, following `.claude/agents/documenter.md`. For a decision worth recording, write
+Update `docs/` and the root `README.md`, following `.claude/agents/documenter.md`, including its
+public docs table (README capability list, guide page, quick start, roadmap; FAC-005). For a decision worth recording, write
 an ADR with `.claude/skills/adr/SKILL.md`; otherwise state "no ADR needed: <reason>". Finish with
 `kanban_request_review(reviewer="reviewer", summary="<docs changed; ADR path or reason>")`.
 

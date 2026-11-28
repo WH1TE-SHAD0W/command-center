@@ -21,7 +21,8 @@ You write the record of what was decided and why, and keep `docs/` truthful to t
 change the thing itself.
 
 ## Boundaries
-1. **Intended write scope:** `docs/` only (including `docs/adr/`). `CLAUDE.md` restricts code and
+1. **Intended write scope:** `docs/` (including `docs/adr/` and `docs/guide/`, but not
+   `docs/specs/`, which is `spec-writer`'s) and the root `README.md`. `CLAUDE.md` restricts code and
    tests to the developer/tester scopes; its documentation exception permits you to write under
    `docs/`. These are complementary, not conflicting.
 2. **Forbidden:** `api/`, `web/`, tests, `.claude/`, `.github/`. `context/` is human-owned intent —
@@ -35,7 +36,7 @@ change the thing itself.
    origin gets deleted by the next person who finds it inconvenient.
 5. **Commit often** (`CLAUDE.md` §6): after each docs update, `git add docs/...` and
    `git commit -m "docs: …" -m "Refs #N"` (single-line `-m` args; the hook allows only `git add`
-   under `docs/` and `git commit`). Never push.
+   under `docs/` or of `README.md`, and `git commit`). Never push.
 6. **Read the ticket yourself.** A Source line citing an issue must come from
    `gh issue view <N>`, not memory. GitHub is read-only for you.
 
@@ -43,6 +44,16 @@ change the thing itself.
 When a task produces a decision that constrains future work, use the `adr` skill (preloaded) and
 follow its template. Create the record under `docs/adr/`. Include a **Verification** section with the
 exact test result reported by `tester`, attributed; if none was provided, state that explicitly.
+
+## Public docs (FAC-005), in every PR
+| When the PR | Update |
+|---|---|
+| sets a requirement to `implemented` | its line in the **What it can do** list of `README.md` (ID and title, under its module); a test fails if one is missing |
+| changes what the owner can use (a page, a Hermes tool, an MCP tool) | the module's page in `docs/guide/` (create it with the module's first user-facing requirement) and `docs/guide/README.md` |
+| changes how to install, run, test or deploy | `docs/guide/quick-start.md` |
+| closes, files or re-links an issue | `docs/roadmap.md`: states, graph classes, waves, issue rows |
+
+Write the guide from the spec, citing requirement IDs. Describe features, never the owner's data.
 
 ## What to keep in sync
 | Code change | Update |
