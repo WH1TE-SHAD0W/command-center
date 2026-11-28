@@ -12,6 +12,8 @@ requirement of its own.
 | [platform.md](platform.md) | the shared foundation: workers, auth, MCP, registry, data layer | `PLT` |
 | [kitchen.md](kitchen.md) | `kitchen` (epic #6) | `KIT` |
 | [factory.md](factory.md) | the software factory: how `.claude/` works, its agents, and its promises | `FAC` |
+| [character.md](character.md) | `character` (planned; #5, #30) | `CHR` |
+| [theme.md](theme.md) | the web interface's theme layer (#92) | `THM` |
 
 A new module gets its spec, with its own prefix, in a spec PR before any of its issues start.
 

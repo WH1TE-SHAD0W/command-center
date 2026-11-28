@@ -142,8 +142,47 @@
 | B1–B7 | Branch names, commits, PR format, merge method, where it's written | "branching strategy sounds good, but the hermes agent needs to be able to use it" | `AGENTS.md`, `docs/workflow.md` |
 | B4 | Who merges | "I merge the stuff, hermes creates PRs" | `AGENTS.md` §3 |
 
+## 9. UI, themes and visualisations (2026-11-27)
+
+Prototypes were drawn inline in the chat; nothing was built. Data in them was synthetic.
+
+| # | Question | Answer | Recorded in |
+|---|---|---|---|
+| U0 | How to approach theme and style | "lets use the newly imported skill taste of ux to create a astro page … lets think about it first what kind of styles could be used for example star trek panel" | — |
+| U1 | First style direction, tokens, first page | Picked from options: **hybrid** (instrument-panel base, monospace accents, LCARS header on the home page only), **tokens created in `web/`** (no design system exists yet), **home dashboard** first. The style pick was later reopened (U5–U11) | — |
+| U2 | Record it and build the Astro page now? | "not yet lets just do a prototype in the chat what would be the panels, widgets, components what is needed there how would it look like" | — |
+| U3 | Other styles | Asked "what other styles could have been used?"; 15 directions listed (sci-fi, RPG, industrial, editorial, experimental) | — |
+| U4 | The Expanse style | "try the expanse style"; afterwards "the expanse colors are okay" | — |
+| U5 | Layouts without panels (status report, day timeline, orbit, briefing) | "this has panels as well lets make it completely distinguished and separate like okay the dashboard might be the build of panels but other sections and especially specific pages would have a nice design". So: **the dashboard is a grid of panels; each module page gets its own design** | — |
+| U6 | Character page | "the character would have rpg character stats with hexagonal diagram" | — |
+| U7 | Which industrial styles | "from industrial style i liked the blueprint and data art ui"; criticised the earlier rounds: "all you did before was just different colors or what so ever" | — |
+| U8 | Character page prototype (hex radar, XP flows, revisions, title block) | "that visual is getting closer drop some visuals for other parts as well" | — |
+| U9 | Page prototypes (habits year ring, watchtower schematic, kitchen menu + spec sheet, jobs tracks, ideas constellation) | "these widgets and components are nice i like the node structure" | — |
+| U10 | What a theme is | "if it was meant to be a themed page lets say i get the star trek there would be icons and names in that not only style but theme". A theme is vocabulary, icons, structure and metaphor, not only colours. Expanse shown as a ship with stacked decks as navigation and an in-world lexicon | — |
+| U11 | Star Trek versions | Classic LCARS shown, then "some futuristic ZORA like in star trek discovery styles": Hermes as the ship intelligence at the centre, modules orbiting it, a Hermes line on every page. "try showcasing each page using the widgets from before": all pages shown in that style | — |
+| U12 | Can themes be swapped after the build? | Explained: yes, only if a theme layer (tokens, lexicon, glyphs, shell) exists from the start and modules output meaning, not words or colours. **Not decided** | — |
+| U13 | Maps | "i love maps, what other visualizations could be implemented and where". Metro map for habits: "i dont like this" (**rejected**). Territory map, topography, route map and geographic maps (cuisine atlas, meetups, future fitness/travel) not decided | — |
+| U14 | UI inventory | Full list of pages, widgets, visualisations and components given in chat; saving it as `docs/ui-inventory.md` was offered, no answer yet | — |
+| U15 | Tech trees (character skill tree, app roadmap) | "i want both but the character skill tree has to overlap with the whole thing it would be most likely be tied to craft and those specs and projects, jobs, tasks done ... with goals in mind"; "keep the roadmap tech tree and character stat as ideas both in github" | issues #29, #30 |
+| U16 | Find the theme | "lets find out what theme i would like to use": an interactive picker with six themes (Expanse, classic LCARS, Discovery/Zora-style, Pip-Boy, Blueprint, Glass cockpit) and five questions. No result was sent back | — |
+| U17 | Elite Dangerous | "what about elite dangerous gui": prototype drawn. "the pip's section is a good idea although the as it was built feels like it requires much more immersion that the web doesnt give". Its look is **rejected**; pips **liked**; ranks, missions and scanner kept as ideas. Filter suggested: the theme should work natively as a flat web page | `ui-theme-exploration.md` |
+| U18 | Finalists and the soul | "so elite's schemas doesnt fit and ui style its expanse vs zora but the thing is to give the app a soul or something like that something behind it it would work". Expanse as body (mechanical soul), Zora as mind (relationship), and both together were explained | `ui-theme-exploration.md` |
+| U19 | Pause | "lets leave it here for a while and make an extract of it. I like zora because thats how it would end up it has to know me i am the captain but expanse mindest fits more but IRL it lacks the immersion to make it work (i guess). the holographic 3d visualizations if translated to web it would make it look nice although expanse way is more connected on its theme". **Undecided** between the two | `ui-theme-exploration.md` |
+| U20 | Pips and the tech tree | "those pips could be research points available in the tech tree just mention it even if doesnt make sense". Recorded, not designed | issue #30 |
+| U21 | Expanse or Zora | "okay i have decided to go with zora over expanse consoles" (2026-11-28). **Decided** | ADR 0016, `docs/specs/theme.md` |
+| U22 | Mechanics, theme layer, records | Mechanics: "use the star trek ships idea of managing systems, 5 y mission as a goal target and other stuff in there record this using the spec driven development so these should be specs". Theme layer: "Swappable, Zora first". Records: "adr log issue and spec as per sdd" | ADR 0016, `docs/specs/theme.md`, `docs/specs/character.md`, #92 |
+
 ## Still open (as of 2026-11-27)
 
 See `context.md` §8 for the live list. In short: M13 (cross-module links), the check-in format, kitchen
 tags by Hermes, kitchen variants, the level curve, streaks, the to-do list, alerts, the remaining
 modules (ideas, watchtower, jobs), and the portfolio status feed.
+
+UI (section 9, extract in `ui-theme-exploration.md`). Decided on 2026-11-28: Zora-style theme first in a
+swappable theme layer (ADR 0016); Star Trek ship systems and a five-year mission as character mechanics
+(`docs/specs/character.md`). Still open: the **Open** lines in `docs/specs/theme.md` and
+`docs/specs/character.md`; how deep a theme goes (renaming stats);
+who writes the Hermes lines and briefing (API templates, Hermes through MCP, or both); the dashboard
+questions (kitchen widget, alert strip, heatmap layout, ticking on the home page, phone width, mono vs
+sans); stats 5 and 6 for the hexagon; which maps to use; what unlocking a skill-tree node does (#30);
+and whether to save the UI inventory in `docs/`.
