@@ -61,6 +61,7 @@ describe("#17 kitchen schema and its first migration", () => {
     expect(read).toEqual({
       ...recipe,
       id: created.id,
+      variant: "",
       archivedAt: null,
       createdAt: created.createdAt,
       updatedAt: created.updatedAt,
@@ -82,6 +83,7 @@ describe("#17 kitchen schema and its first migration", () => {
       id: { type: "TEXT", notnull: 1, pk: 1 },
       name: { type: "TEXT", notnull: 1, pk: 0 },
       name_normalized: { type: "TEXT", notnull: 1, pk: 0 },
+      variant: { type: "TEXT", notnull: 1, pk: 0 },
       type: { type: "TEXT", notnull: 1, pk: 0 },
       servings: { type: "INTEGER", notnull: 0, pk: 0 },
       tags: { type: "TEXT", notnull: 1, pk: 0 },
@@ -101,6 +103,7 @@ describe("#17 kitchen schema and its first migration", () => {
       .returning();
 
     expect(created).toMatchObject({
+      variant: "",
       servings: null,
       tags: [],
       sourceUrl: null,
@@ -126,13 +129,28 @@ describe("#17 kitchen schema and its first migration", () => {
     expect(updated.updatedAt.getTime()).toBeGreaterThan(created.updatedAt.getTime());
   });
 
-  it("AC1: the normalised name is unique, so a second recipe with the same one is refused", async () => {
+  it("AC1: a second original with the same normalised name is refused", async () => {
     const recipe = syntheticRecipe("Unique");
     await db.insert(kitchenRecipes).values(recipe);
 
     expect(
       await constraintError(db.insert(kitchenRecipes).values({ ...recipe, name: "SYNTHETIC UNIQUE DUMPLINGS" })),
-    ).toMatch(/UNIQUE constraint failed: kitchen_recipes\.name_normalized/);
+    ).toMatch(/UNIQUE constraint failed: kitchen_recipes\.name_normalized, kitchen_recipes\.variant/);
+  });
+
+  it("AC1: a named variant of the same dish is allowed once", async () => {
+    const recipe = syntheticRecipe("Variant");
+    await db.insert(kitchenRecipes).values(recipe);
+
+    const [variant] = await db
+      .insert(kitchenRecipes)
+      .values({ ...recipe, variant: "vegetarian" })
+      .returning();
+
+    expect(variant).toMatchObject({ nameNormalized: recipe.nameNormalized, variant: "vegetarian" });
+    expect(
+      await constraintError(db.insert(kitchenRecipes).values({ ...recipe, variant: "vegetarian" })),
+    ).toMatch(/UNIQUE constraint failed: kitchen_recipes\.name_normalized, kitchen_recipes\.variant/);
   });
 
   it("AC2: kitchen_recipe_photos has id, recipe id, R2 key, archived_at and created_at", async () => {

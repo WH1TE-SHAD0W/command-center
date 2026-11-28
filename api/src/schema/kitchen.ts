@@ -38,8 +38,13 @@ export const kitchenRecipes = sqliteTable(
   {
     id: id(),
     name: text("name").notNull(),
-    /** The name folded for duplicate checks (case and accents ignored); unique (#18). */
+    /** The name folded for duplicate checks (case and accents ignored, #18). */
     nameNormalized: text("name_normalized").notNull(),
+    /**
+     * Marks a genuine variant of a dish ("vegetarian"); `""` for the original. Not NULL, because
+     * SQLite treats NULLs as distinct in a unique index and two originals would slip through.
+     */
+    variant: text("variant").notNull().default(""),
     type: text("type").$type<RecipeType>().notNull(),
     servings: integer("servings"),
     tags: text("tags", { mode: "json" }).$type<RecipeTag[]>().notNull().default([]),
@@ -53,7 +58,8 @@ export const kitchenRecipes = sqliteTable(
       .$defaultFn(() => new Date())
       .$onUpdateFn(() => new Date()),
   },
-  (t) => [uniqueIndex("kitchen_recipes_name_normalized_unique").on(t.nameNormalized)],
+  // One recipe per dish and variant (owner's decision on #17, 2026-11-28).
+  (t) => [uniqueIndex("kitchen_recipes_name_variant_unique").on(t.nameNormalized, t.variant)],
 );
 
 /** Photos of a recipe; the image itself lives in the private R2 bucket under `r2Key` (ADR 0008). */

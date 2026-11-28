@@ -13,6 +13,7 @@ CREATE TABLE `kitchen_recipes` (
 	`id` text PRIMARY KEY NOT NULL,
 	`name` text NOT NULL,
 	`name_normalized` text NOT NULL,
+	`variant` text DEFAULT '' NOT NULL,
 	`type` text NOT NULL,
 	`servings` integer,
 	`tags` text DEFAULT '[]' NOT NULL,
@@ -24,4 +25,4 @@ CREATE TABLE `kitchen_recipes` (
 	`updated_at` integer NOT NULL
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `kitchen_recipes_name_normalized_unique` ON `kitchen_recipes` (`name_normalized`);
+CREATE UNIQUE INDEX `kitchen_recipes_name_variant_unique` ON `kitchen_recipes` (`name_normalized`,`variant`);
