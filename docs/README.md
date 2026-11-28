@@ -29,5 +29,6 @@
 | [0013](adr/0013-generate-all-drizzle-migrations-into-one-folder.md) | All Drizzle migrations in one folder from one combined schema; one shared Drizzle instance | Accepted |
 | [0014](adr/0014-learn-from-each-roadmap-phase-through-lesson-issues.md) | The factory learns after each roadmap wave: Lessons in every PR, `factory:lesson` issues, a steward agent that opens fix PRs | Accepted |
 | [0015](adr/0015-make-living-module-specs-the-source-of-record-for-behaviour.md) | Living module specs in `docs/specs/` are the source of record for behaviour; spec PR first; CI traceability check | Accepted |
+| [0016](adr/0016-render-the-interface-through-swappable-themes-with-a-zora-style-first-theme.md) | The interface renders through swappable themes (tokens, lexicon, glyphs, shell); modules return meaning only; Zora-style (Star Trek Discovery) is the first theme | Accepted |
 
 The question-and-answer record behind these decisions: [`context/brainstorm-log.md`](../context/brainstorm-log.md).
