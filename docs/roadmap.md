@@ -10,8 +10,8 @@
 
 | State | Meaning | Issues |
 |---|---|---|
-| **Done** | closed (merged) | #9, #10, #11, #12, #14, #16 |
-| **In progress** | a session is building it | #13, #15, #17, #36, #40, #42 |
+| **Done** | closed (merged) | #9, #10, #11, #12, #14, #15, #16, #36, #40, #42 |
+| **In progress** | a session is building it, or its PR is open | #13 (PR #49), #17 |
 | **Unblocked, needs your decision** | every dependency is closed, but a **Decision needed** is open | #41 |
 | **Locked** | at least one dependency is still open | #18–#24 |
 | **Design pending** | on hold until UI design issues exist, even once unlocked | #25, #26 |
@@ -71,8 +71,8 @@ flowchart LR
   I21 & I10 --> I25
   I21 & I24 --> I26
 
-  class I9,I10,I11,I12,I14,I16 done
-  class I13,I15,I17,I36,I40,I42 ready
+  class I9,I10,I11,I12,I14,I15,I16,I36,I40,I42 done
+  class I13,I17 ready
   class I41 decide
   class I18,I19,I20,I21,I22,I23,I24 locked
   class I25,I26 design
@@ -87,14 +87,15 @@ wave can run in parallel. This is dependency depth only, not a priority you have
 |---|---|---|
 | 0 | #9 ✅ | — |
 | 1 | #10 ✅, #11 ✅, #12 ✅, #14 ✅, #16 ✅ | #9 |
-| 2 | #13, #15, #17, #36, #40, #41, #42 | #13 ← #10 #11 #12 · #15 ← #10 #14 · #17 ← #11 #16 · #36 ← #10 #11 #12 #14 · #40, #42 ← #10 #14 · #41 ← #14 |
+| 2 | #13, #15 ✅, #17, #36 ✅, #40 ✅, #41, #42 ✅ | #13 ← #10 #11 #12 · #15 ← #10 #14 · #17 ← #11 #16 · #36 ← #10 #11 #12 #14 · #40, #42 ← #10 #14 · #41 ← #14 |
 | 3 | #18, #20, #23 | #17 (and #15 for #23) |
 | 4 | #19, #24 | #18 · #23 |
 | 5 | #21, #22 | #18 #19 #20, plus #14 (#21) or #15 (#22) |
 | 6 | #25, #26 (design pending) | #21, plus #10 (#25) or #24 (#26) |
 
-**Critical path to the kitchen API:** #11 → #17 → #18 → #19 → #21 / #22, with the photo chain
-#14 → #15 → #23 → #24 beside it. The pages #25 and #26 also wait for UI design.
+**Critical path to the kitchen API:** #17 → #18 → #19 → #21 / #22, with the photo chain
+#17 → #23 → #24 beside it. #17 is now the only open gate: once it merges, #18, #20 and #23 can start
+in parallel. The pages #25 and #26 also wait for UI design.
 
 **Parallel caution:** parallel PRs conflict in `package-lock.json` and shared files. Each branch
 merges `main` in (no rebase, no force-push) before it is merged.
@@ -109,20 +110,20 @@ merges `main` in (no rebase, no force-push) before it is merged.
 | 10 | Scaffold the Astro web worker with the service binding to the API | #9 | Claude Code | ✅ merged (#37): no SESSION/IMAGES bindings; Svelte installed only |
 | 11 | Set up Drizzle (one shared migrations folder, ADR 0013) | #9 | Claude Code | ✅ merged (#38): no collector, no `d1-migrations/` |
 | 12 | Add the module registry and the architecture test | #9 | Claude Code | ✅ merged (#35): routes only, tools left to #15 |
-| 13 | Add GitHub Actions for typecheck, tests and build | #9 #10 #11 #12 | Hermes | none listed |
+| 13 | Add GitHub Actions for typecheck, tests and build | #9 #10 #11 #12 | Claude Code | PR #49 open: one check per job (typecheck, test, architecture, build, cloudflare-build) |
 | 14 | Validate the Cloudflare Access JWT on every API request | #9 | Claude Code | ✅ merged (#39): `CLOUDFLARE_ACCESS_TEAM_DOMAIN`, `CLOUDFLARE_ACCESS_AUD`; JWKS cached in `OAUTH_KV` |
-| 15 | Serve the MCP server at /mcp with workers-oauth-provider | #10 #14 | Claude Code / you | none listed |
-| 36 | Upgrade the API worker to Wrangler 4 | #10 #11 #12 #14 | Claude Code | split out of #10 |
-| 40 | Forward the Access JWT from the web worker to the API | #10 #14 | Claude Code | none listed |
+| 15 | Serve the MCP server at /mcp with workers-oauth-provider | #10 #14 | Claude Code | ✅ merged (#46): optional `OAUTH_CONSENT_SECRET` remembers consent |
+| 36 | Upgrade the API worker to Wrangler 4 | #10 #11 #12 #14 | Claude Code | ✅ merged (#47): vitest 5 with `@cloudflare/vitest-plugin` |
+| 40 | Forward the Access JWT from the web worker to the API | #10 #14 | Claude Code | ✅ merged (#44): forwards only `Cf-Access-Jwt-Assertion` |
 | 41 | Add the local dev bypass and actor mapping to the Access check | #14 | Claude Code / you | **open**: how the bypass is switched on; the `actor` shape |
-| 42 | Prepare the repository for Cloudflare Workers Builds deploys | #10 #14 | Claude Code | remote D1 migrations stay manual |
+| 42 | Prepare the repository for Cloudflare Workers Builds deploys | #10 #14 | Claude Code | ✅ merged (#45): remote D1 migrations stay manual; real resource IDs in #48 |
 
 ### Kitchen (epic #6)
 
 | # | Issue | Depends on | Built by | Decisions |
 |---|---|---|---|---|
 | 16 | Add the recipe type and recipe tag enums | #9 | Claude Code | ✅ merged (#34), kebab-case values; tags: bbq, meat, sweet, slovak, sunday dish, saturday dish, friday dish, wednesday dish (extendable); type order = menu order |
-| 17 | Add the kitchen schema and its first migration | #11 #16 | Hermes | text UUID id; `amount` optional number ("to taste" goes in `note`); `steps` as `string[]`; `servings` optional |
+| 17 | Add the kitchen schema and its first migration | #11 #16 | Claude Code | text UUID id; `amount` optional number ("to taste" goes in `note`); `steps` as `string[]`; `servings` optional |
 | 18 | Create recipes with a duplicate check that ignores case and accents | #17 | Hermes | an archived recipe does not block the same name (same-name variants will exist later) |
 | 19 | Update and archive recipes | #18 | Hermes | unarchive allowed; duplicate check on unarchive proposed in the PR |
 | 20 | Search recipes with FTS5, ignoring accents | #17 | Hermes | SQL triggers |
@@ -166,6 +167,15 @@ There are no issues for the visual design (theme, layout, how images and the men
 there are, the work is data and API only: #25 and #26 stay on hold, and design work may still change
 requirements here (for example the image widths in #24). When design issues are filed, they get
 their own section and edges.
+
+## Deploys
+
+Both workers are connected to Cloudflare Workers Builds and deploy on every push to `main`
+(2026-11-28). The settings are in `docs/development.md`. The API (`command-center-api`) runs with its
+real D1, R2 and KV bindings (#48). The web worker (`command-center`) runs at `app.culak.eu` behind
+Access, with the `API` service binding. Still to do: set `CLOUDFLARE_ACCESS_TEAM_DOMAIN` and
+`CLOUDFLARE_ACCESS_AUD` on the API worker (until then the API answers 500), and the Access bypass for
+the Hermes paths (`/mcp`, `/token`, `/register`, `/.well-known/oauth-*`, `/uploads/*`).
 
 ## How the work is delivered
 
