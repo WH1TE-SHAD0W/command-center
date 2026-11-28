@@ -8,6 +8,7 @@
 | [data-model.md](data-model.md) | D1 tables per module (draft) |
 | [specs/](specs/) | **What each module must do**: one living spec per module, numbered requirements (ADR 0015) |
 | [roadmap.md](roadmap.md) | Every GitHub issue, its dependencies, and what can start now |
+| [guide/](guide/) | **How to run and use the app**: quick start, and a page per usable module (FAC-005) |
 | [workflow.md](workflow.md) | Issues → branches → PRs; the owner merges (agents: see `/AGENTS.md`) |
 | [development.md](development.md) | npm + Wrangler, local dev, tests in workerd, deploys |
 | [adr/](adr/) | Architecture Decision Records: one decision per file, never rewritten (supersede instead) |

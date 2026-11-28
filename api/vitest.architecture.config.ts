@@ -29,7 +29,20 @@ function read(files: string[]): Record<string, string> {
 const specFiles = walk("docs/specs").filter((f) => f.endsWith(".md") && !f.endsWith("/README.md"));
 const testFiles = ["api/test", "api/src", "web/test", "web/src"]
   .flatMap(walk)
-  .filter((f) => f.endsWith(".test.ts") && !f.endsWith("/spec-trace.test.ts"));
+  .filter((f) => f.endsWith(".test.ts"));
+
+// docs/specs/factory.md: the factory conformance test reads these files and the .claude/ tree.
+const claudeTree = [...walk(".claude"), ...walk("docs/guide")].filter(
+  (f) => !f.startsWith(".claude/worktrees/") && !f.endsWith("settings.local.json"),
+);
+const factoryFiles = [
+  "README.md",
+  "AGENTS.md",
+  "CLAUDE.md",
+  "docs/specs/factory.md",
+  "ops/hermes-kanban/skills/command-center-worker/SKILL.md",
+  ...claudeTree.filter((f) => /\.(md|json|mjs)$/.test(f)),
+];
 
 export default defineConfig({
   test: {
@@ -37,6 +50,12 @@ export default defineConfig({
     root: apiRoot,
     environment: "node",
     include: ["test/architecture/**/*.test.ts"],
-    provide: { apiRoot, specFiles: read(specFiles), testFiles: read(testFiles) },
+    provide: {
+      apiRoot,
+      specFiles: read(specFiles),
+      testFiles: read(testFiles),
+      factoryFiles: read(factoryFiles),
+      claudeTree,
+    },
   },
 });

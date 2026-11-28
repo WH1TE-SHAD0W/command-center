@@ -150,6 +150,16 @@ itself.
 | 5 | Personal habit tracker | `habits` (+ character) | Defined in context §5.2. The issue text still says "streak counters"; context §5.2 governs (left as is by choice) |
 | 4 | Portfolio redesign | none (separate repo) | Here, at most a public `/status` feed; needs #2 and an ADR (context §8 Q15) |
 
+### Factory (docs/specs/factory.md)
+
+How the software factory works, not app features. No dependencies on the module issues.
+
+| # | Issue | Delivers | State |
+|---|---|---|---|
+| 52 | Add a learning loop to the agent factory | Lessons in every PR, `/retro`, `factory-steward` (ADR 0014) | ✅ merged (#53) |
+| 89 | Complete spec-driven development with living module specs | `docs/specs/`, `spec-writer`, CI traceability (ADR 0015) | ✅ merged (#90) |
+| 94 | Keep the public docs current and conform the factory to its spec | README, `docs/guide/`, FAC-001–008 | in progress |
+
 ### Ideas, not decided
 
 | # | Idea | Leans on |

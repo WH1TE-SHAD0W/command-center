@@ -51,7 +51,7 @@ const { prefixes, requirements } = parseSpecs(inject("specFiles"));
 const byId = new Map(requirements.map((r) => [r.id, r]));
 const tested = idsInTests(inject("testFiles"), [...prefixes.keys()]);
 
-describe("ADR 0015 spec traceability", () => {
+describe("FAC-002 ADR 0015 spec traceability", () => {
   it("every requirement has a known status, a unique ID and its file's prefix", () => {
     const problems: string[] = [];
     const seen = new Set<string>();

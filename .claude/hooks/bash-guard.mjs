@@ -81,7 +81,7 @@ for (const seg of segs) {
     );
   }
   if (mode === "docs-writer") {
-    if (/^git\s+add\s+(--\s+)?(docs\/\S*\s*)+$/.test(seg)) continue;
+    if (/^git\s+add\s+(--\s+)?((docs\/\S*|README\.md)\s*)+$/.test(seg)) continue;
     if (/^git\s+commit\s+(-m\s+("[^"]*"|'[^']*')\s*)+$/.test(seg)) continue;
   }
   if (RESTRICTED.includes(mode)) {

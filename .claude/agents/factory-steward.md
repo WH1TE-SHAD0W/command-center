@@ -43,7 +43,15 @@ Input: the wave number and the date of the previous retro (from the Retros table
 5. **Spec drift** (ADR 0015): list every requirement the wave found missing, wrong or changed
    (a gap sent back to a spec PR, a reviewer BLOCK on spec match, an implemented requirement whose
    code changed). Each becomes a draft lesson whose fix is a spec PR by `spec-writer`.
-6. Write nothing to GitHub. Return the drafts; `issue-manager` files them.
+6. **Delivered work re-checked against the specs** (FAC-006): for each requirement set to
+   `implemented` in the wave, read its acceptance items and the code and tests that claim it;
+   anything not actually met is a draft lesson.
+7. **Docs drift** (FAC-005): the README capability list against the `implemented` requirements,
+   the guide against what the owner can use, the quick start against the scripts, and
+   `docs/roadmap.md` against GitHub's issue states and "blocked by" links
+   (`gh issue list --state all`, `gh api repos/<owner/repo>/issues/<n>/dependencies/blocked_by`).
+   Each difference is a draft lesson whose fix is a docs PR by `documenter`.
+8. Write nothing to GitHub. Return the drafts; `issue-manager` files them.
 
 ## Mode 2: fix one approved lesson
 Input: one `factory:lesson` issue number with `status:ready` (the owner's approval).

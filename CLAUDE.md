@@ -21,8 +21,8 @@ džingel's.
 
 ## Boundaries
 - Application code: `api/src/`, `api/migrations/`, `web/src/`, `web/worker/` (owned by `developer`).
-  Tests: `**/*.test.ts`, `api/test/`, `web/test/` (owned by `tester`). Docs: `docs/` (owned by
-  `documenter`), except `docs/specs/` (owned by `spec-writer`; an implementation PR changes only the
+  Tests: `**/*.test.ts`, `api/test/`, `web/test/` (owned by `tester`). Docs: `docs/` and the root
+  `README.md` (owned by `documenter`), except `docs/specs/` (owned by `spec-writer`; an implementation PR changes only the
   Status and Delivered by lines of what it delivers). Factory files: `CLAUDE.md`, `AGENTS.md`,
   `.claude/`, `.github/workflows/`, `.github/ISSUE_TEMPLATE/`, `ops/hermes-kanban/` (owned by
   `factory-steward`, through approved `factory:lesson` issues, ADR 0014).

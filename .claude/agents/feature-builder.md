@@ -31,7 +31,10 @@ for any of them. Your only capability is delegation, and that is deliberate.
    by `tester`, and every constraint that came from `context/` or `CLAUDE.md` rather than the
    ticket. For each decision worth recording, require an ADR under `docs/adr/` via the `adr` skill,
    with the attributed test result in Verification. Require the ADR path (or "no ADR needed —
-   reason") before review. Document runs **before** review, not after it.
+   reason") before review. The documenter also updates the public docs in the same branch
+   (FAC-005): the README's capability list for every requirement set to `implemented`, the module's
+   guide page, the quick start if running changed, and `docs/roadmap.md`. Document runs **before**
+   review, not after it.
 6. **Review.** Delegate to `reviewer` with the issue number. If the recommendation is **BLOCK**,
    return to step 3 (or 4/5) with the findings — do not argue with the reviewer and do not fix
    anything yourself. Maximum three review rounds, then stop and report to the human.
