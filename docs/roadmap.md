@@ -11,7 +11,7 @@
 | State | Meaning | Issues |
 |---|---|---|
 | **Done** | closed (merged) | #9, #10, #11, #12, #14, #15, #16, #36, #40, #42 |
-| **In progress** | a session is building it, or its PR is open | #13 (PR #49), #17 |
+| **In progress** | a session is building it, or its PR is open | #13 (PR #49), #17 (PR #50) |
 | **Unblocked, needs your decision** | every dependency is closed, but a **Decision needed** is open | #41 |
 | **Locked** | at least one dependency is still open | #18–#24 |
 | **Design pending** | on hold until UI design issues exist, even once unlocked | #25, #26 |
@@ -123,7 +123,7 @@ merges `main` in (no rebase, no force-push) before it is merged.
 | # | Issue | Depends on | Built by | Decisions |
 |---|---|---|---|---|
 | 16 | Add the recipe type and recipe tag enums | #9 | Claude Code | ✅ merged (#34), kebab-case values; tags: bbq, meat, sweet, slovak, sunday dish, saturday dish, friday dish, wednesday dish (extendable); type order = menu order |
-| 17 | Add the kitchen schema and its first migration | #11 #16 | Claude Code | text UUID id; `amount` optional number ("to taste" goes in `note`); `steps` as `string[]`; `servings` optional |
+| 17 | Add the kitchen schema and its first migration | #11 #16 | Claude Code | PR #50 open; text UUID id; `amount` optional number ("to taste" goes in `note`); `steps` as `string[]`; `servings` optional |
 | 18 | Create recipes with a duplicate check that ignores case and accents | #17 | Hermes | an archived recipe does not block the same name (same-name variants will exist later) |
 | 19 | Update and archive recipes | #18 | Hermes | unarchive allowed; duplicate check on unarchive proposed in the PR |
 | 20 | Search recipes with FTS5, ignoring accents | #17 | Hermes | SQL triggers |
@@ -173,9 +173,9 @@ their own section and edges.
 Both workers are connected to Cloudflare Workers Builds and deploy on every push to `main`
 (2026-11-28). The settings are in `docs/development.md`. The API (`command-center-api`) runs with its
 real D1, R2 and KV bindings (#48). The web worker (`command-center`) runs at `app.culak.eu` behind
-Access, with the `API` service binding. Still to do: set `CLOUDFLARE_ACCESS_TEAM_DOMAIN` and
-`CLOUDFLARE_ACCESS_AUD` on the API worker (until then the API answers 500), and the Access bypass for
-the Hermes paths (`/mcp`, `/token`, `/register`, `/.well-known/oauth-*`, `/uploads/*`).
+Access, with the `API` service binding. The API worker has `CLOUDFLARE_ACCESS_TEAM_DOMAIN` and
+`CLOUDFLARE_ACCESS_AUD` as secrets. Still to do: the Access bypass for the Hermes paths (`/mcp`,
+`/token`, `/register`, `/.well-known/oauth-*`, `/uploads/*`), needed before Hermes can connect.
 
 ## How the work is delivered
 
