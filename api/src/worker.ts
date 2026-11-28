@@ -1,9 +1,4 @@
-import { createApp, Bindings } from "./app";
+import { createWorker } from "./app";
 
-const app = createApp();
-
-export default {
-  fetch(request: Request, env: Bindings, ctx: ExecutionContext) {
-    return app.fetch(request, env, ctx);
-  },
-};
+/** `workers-oauth-provider` wrapping the Hono app (ADR 0007). */
+export default createWorker();

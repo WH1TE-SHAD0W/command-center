@@ -12,6 +12,8 @@
     "deploy": "wrangler deploy"
   },
   "dependencies": {
+    "@cloudflare/workers-oauth-provider": "^1.4.0",
+    "@modelcontextprotocol/server": "^2.4.0",
     "drizzle-orm": "^0.45.4",
     "hono": "^4.6.0",
     "jose": "^6.2.18",

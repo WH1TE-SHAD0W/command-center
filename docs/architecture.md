@@ -49,6 +49,29 @@ from `https://<team>/cdn-cgi/access/certs` on a miss, or when a token names an u
 rotation, at most every 30 s). Only the ADR 0007 machine paths skip the check: exactly `/mcp`,
 `/token` and `/register`, anything under `/.well-known/oauth-`, and `/uploads/<one segment>`.
 
+### MCP and OAuth (issue #15)
+
+The API worker's export is `createWorker()` (`api/src/app.ts`): `workers-oauth-provider` in front
+of the Hono app, with its state in `OAUTH_KV`. The provider serves `/token`, `/register` (dynamic
+client registration) and `/.well-known/oauth-*`, and only lets `/mcp` through with a valid bearer
+token. Everything else, `/authorize` included, goes to `createApp`, so `/authorize` passes
+`accessAuth` like any page: no Access JWT, `401`. With one, it shows a consent page (client name,
+redirect host, a warning for local redirects) and issues a code only after **Allow**
+(`api/src/oauth.ts`). Client-supplied strings on that page go through Hono's `html` escaping. If the
+`OAUTH_CONSENT_SECRET` worker secret (32+ characters) is set, an approval is remembered for 30 days
+in a signed cookie and later authorizations of the same client skip the page; without it the page
+shows every time. Access tokens live 1 h; refresh tokens 30 days, extended on every refresh.
+
+`/mcp` is stateless streamable HTTP (`@modelcontextprotocol/server` v2, `api/src/mcp.ts`). Each
+request builds a fresh server and asks every listed module to register its tools from
+`src/mcp/<module>.ts` (`Module.mcp` in `modules.ts`). A tool gets `{ env, props }`, where `props` is
+`{ actor: "owner", sub }` from the Access login that approved the client. The public origin
+`https://app.culak.eu` is fixed in `oauth.ts` (the resource is `https://app.culak.eu/mcp`).
+
+The web worker's middleware (`web/src/middleware.ts`, `web/src/lib/passthrough.ts`) hands `/mcp`,
+`/token`, `/register`, `/authorize`, `/.well-known/oauth-*` and `/uploads/<one segment>` to the API
+unchanged (`env.API.fetch(request)`) before any page runs.
+
 Planned, not built yet: mapping the claims to `c.var.actor` (`{ kind: "owner" | "service", id }`),
 after which ingest routes accept only `service` and UI routes only `owner`.
 

@@ -125,6 +125,10 @@ Neither value is a secret, but neither belongs in this public repository. Two wa
 Without both values every request except the ADR 0007 machine paths fails closed with
 `500 {"error":"authentication is not configured"}`.
 
+Optionally also set `OAUTH_CONSENT_SECRET` (32+ characters) as a secret on `command-center-api`. It
+lets `/authorize` remember an approval; until it is set, the consent page shows on every
+authorization (#15).
+
 **5. Create the Access application before attaching the custom domain** (Zero Trust → Access →
 Applications → Self-hosted, domain `app.culak.eu`):
 - An *Allow* policy for the owner's identity only.
