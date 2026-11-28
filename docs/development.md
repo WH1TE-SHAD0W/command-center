@@ -75,7 +75,8 @@ Do them in this order.
 | R2 bucket (private, ADR 0008) | `npx wrangler r2 bucket create <name>` | `r2_buckets[0].bucket_name` (`command-center-files-local`); R2 has no ID |
 | KV namespace (OAuth state and the Access key cache) | `npx wrangler kv namespace create OAUTH_KV` | `kv_namespaces[0].id` (`placeholder-kv-id`) |
 
-Commit that change through a PR like any other. The web worker binds no resources, only `API`
+Commit that change through a PR like any other. Done on 2026-11-28: `api/wrangler.jsonc` now holds
+the real D1 database, R2 bucket and KV namespace. The web worker binds no resources, only `API`
 (the service binding to `command-center-api`) and `ASSETS`.
 
 **2. Apply the D1 migrations to the remote database** (manual and reviewed, never part of a build):
