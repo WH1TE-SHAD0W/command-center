@@ -12,20 +12,20 @@
   "d1_databases": [
     {
       "binding": "DB",
-      "database_name": "command-center-db-local",
-      "database_id": "placeholder-d1-id"
+      "database_name": "command-center",
+      "database_id": "fcf1dd6b-317a-438d-88ba-4fe751b8867b"
     }
   ],
   "r2_buckets": [
     {
       "binding": "FILES",
-      "bucket_name": "command-center-files-local"
+      "bucket_name": "command-center"
     }
   ],
   "kv_namespaces": [
     {
       "binding": "OAUTH_KV",
-      "id": "placeholder-kv-id"
+      "id": "284bbda64e1b434b897149d61c8cec5c"
     }
   ]
 }
