@@ -13,7 +13,7 @@
 | **Done** | closed (merged) | #9, #10, #11, #12, #14, #15, #16, #36, #40, #42 |
 | **In progress** | a session is building it, or its PR is open | #13 (PR #49), #17 (PR #50) |
 | **Unblocked, needs your decision** | every dependency is closed, but a **Decision needed** is open | #41 |
-| **Locked** | at least one dependency is still open | #18–#24 |
+| **Locked** | at least one dependency is still open | #18–#24, #54 |
 | **Design pending** | on hold until UI design issues exist, even once unlocked | #25, #26 |
 | **Not broken down** | the original module tickets; no child issues yet | #1, #2, #3, #4, #5 |
 | **Idea, not decided** | needs its open questions answered (and maybe an ADR) | #7, #28, #29, #30, #31, #32 |
@@ -40,6 +40,7 @@ flowchart LR
     I40["#40 Web forwards the Access JWT"]
     I41["#41 Dev bypass + actor mapping"]
     I42["#42 Workers Builds deploy prep"]
+    I54["#54 ArchUnit architecture tests in CI"]
   end
 
   subgraph K["Kitchen, epic #6"]
@@ -62,6 +63,7 @@ flowchart LR
   I10 & I11 & I12 & I14 --> I36
   I10 & I14 --> I40 & I42
   I14 --> I41
+  I13 & I17 --> I54
   I11 & I16 --> I17
   I17 --> I18 --> I19
   I17 --> I20
@@ -74,7 +76,7 @@ flowchart LR
   class I9,I10,I11,I12,I14,I15,I16,I36,I40,I42 done
   class I13,I17 ready
   class I41 decide
-  class I18,I19,I20,I21,I22,I23,I24 locked
+  class I18,I19,I20,I21,I22,I23,I24,I54 locked
   class I25,I26 design
 ```
 
@@ -88,7 +90,7 @@ wave can run in parallel. This is dependency depth only, not a priority you have
 | 0 | #9 ✅ | — |
 | 1 | #10 ✅, #11 ✅, #12 ✅, #14 ✅, #16 ✅ | #9 |
 | 2 | #13, #15 ✅, #17, #36 ✅, #40 ✅, #41, #42 ✅ | #13 ← #10 #11 #12 · #15 ← #10 #14 · #17 ← #11 #16 · #36 ← #10 #11 #12 #14 · #40, #42 ← #10 #14 · #41 ← #14 |
-| 3 | #18, #20, #23 | #17 (and #15 for #23) |
+| 3 | #18, #20, #23, #54 | #17 (and #15 for #23) · #54 ← #13 #17 |
 | 4 | #19, #24 | #18 · #23 |
 | 5 | #21, #22 | #18 #19 #20, plus #14 (#21) or #15 (#22) |
 | 6 | #25, #26 (design pending) | #21, plus #10 (#25) or #24 (#26) |
@@ -117,6 +119,7 @@ merges `main` in (no rebase, no force-push) before it is merged.
 | 40 | Forward the Access JWT from the web worker to the API | #10 #14 | Claude Code | ✅ merged (#44): forwards only `Cf-Access-Jwt-Assertion` |
 | 41 | Add the local dev bypass and actor mapping to the Access check | #14 | Claude Code / you | **open**: how the bypass is switched on; the `actor` shape |
 | 42 | Prepare the repository for Cloudflare Workers Builds deploys | #10 #14 | Claude Code | ✅ merged (#45): remote D1 migrations stay manual; real resource IDs in #48 |
+| 54 | Write the architecture rules as ArchUnit tests and run them in CI | #13 #17 | Claude Code | **open**: library (`archunit` recommended), replace or keep dependency-cruiser, which extra rules |
 
 ### Kitchen (epic #6)
 
