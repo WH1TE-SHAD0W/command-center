@@ -49,6 +49,7 @@ while your branch had one, drop yours (`npx -w api drizzle-kit drop`) and genera
   - `command-center` (root `web/`): `astro build`, then `wrangler deploy`.
 - GitHub Actions (`.github/workflows/ci.yml`): `npm ci`, typecheck, tests, web build. It holds no
   Cloudflare secrets.
-- Secrets and vars (`CLOUDFLARE_ACCESS_AUD`, `CLOUDFLARE_ACCESS_TEAM_DOMAIN`, the alert channel
-  token) go in with `wrangler secret put`, never in the repo. The team domain is the host, such as
+- Secrets and vars (`CLOUDFLARE_ACCESS_AUD`, `CLOUDFLARE_ACCESS_TEAM_DOMAIN`, the optional
+  `OAUTH_CONSENT_SECRET` of 32+ characters that lets `/authorize` remember approvals, the alert
+  channel token) go in with `wrangler secret put`, never in the repo. The team domain is the host, such as
   `<team>.cloudflareaccess.com` (`https://` and a trailing slash are accepted).
