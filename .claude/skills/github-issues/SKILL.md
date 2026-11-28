@@ -33,15 +33,12 @@ instead of filing a new one.
 
 ```markdown
 ## User story
-As a <user group from context/users-and-actors.md>, I want <capability> so that <benefit>.
+As the owner, I want <capability> so that <benefit>.
 
-## Acceptance criteria
-1. <observable, testable behaviour — include the HTTP status / UI state>
-2. <error case: what happens on invalid input>
-3. <privacy/authorisation case when relevant>
-
-## Requirements
-FR-xx, SEC-xx (context/requirements.md)
+## Implements
+KIT-005, KIT-006 (docs/specs/kitchen.md). The acceptance criteria live in the spec, not here
+(ADR 0015). Every cited requirement must be `accepted` and have no **Open:** line; otherwise get a
+spec PR (`spec-writer`) merged first.
 
 ## Out of scope
 - <explicitly excluded>

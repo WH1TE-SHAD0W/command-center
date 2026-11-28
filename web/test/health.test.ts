@@ -34,7 +34,7 @@ afterEach(() => {
   delete env.API;
 });
 
-describe("#10 the index page calls /api/health over the binding", () => {
+describe("PLT-010 #10 the index page calls /api/health over the binding", () => {
   it("calls GET /api/health through the API binding with the typed client", async () => {
     const { binding, requests } = stubBinding(healthy);
     expect(await getApiHealth(binding, new Request("https://app.test/"))).toEqual({ ok: true });

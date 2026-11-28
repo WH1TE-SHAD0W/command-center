@@ -51,7 +51,7 @@ const unlisted: Module = {
   },
 };
 
-describe("#15 Serve the MCP server at /mcp with workers-oauth-provider", () => {
+describe("PLT-007 #15 Serve the MCP server at /mcp with workers-oauth-provider", () => {
   describe("AC1: the provider wraps /mcp and serves /token, /register and /.well-known/oauth-*", () => {
     it("the worker's default export is the OAuth provider", () => {
       expect(worker).toBeInstanceOf(OAuthProvider);

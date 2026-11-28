@@ -10,18 +10,22 @@ džingel's.
 ## Sources of record
 - **Intent:** `context.md` (above). Why each decision was made: `context/brainstorm-log.md`.
   Decisions: `docs/adr/`. How it works today: `docs/`.
+- **Behaviour:** the living module specs in `docs/specs/` (ADR 0015). A requirement exists only
+  there, as a numbered ID such as `KIT-005`. New or changed behaviour goes into a spec PR first.
 - **Tickets:** GitHub Issues in the repository behind `origin` (`git remote get-url origin`).
   Resolve `owner/repo` from `origin` for every `gh` call. Take the issue number from the request; if
-  it cannot be fetched, stop and say so. Never substitute a similar issue.
-- When the ticket, `context.md` and the code disagree, follow the ticket within its scope and report
-  the disagreement.
+  it cannot be fetched, stop and say so. Never substitute a similar issue. An issue is a work item:
+  it cites the requirement IDs it implements and sets the scope.
+- When the spec, the ticket, `context.md` and the code disagree, the spec decides the behaviour and
+  the ticket decides the scope. Report the disagreement; never settle it in code.
 
 ## Boundaries
 - Application code: `api/src/`, `api/migrations/`, `web/src/`, `web/worker/` (owned by `developer`).
   Tests: `**/*.test.ts`, `api/test/`, `web/test/` (owned by `tester`). Docs: `docs/` (owned by
-  `documenter`). Factory files: `CLAUDE.md`, `AGENTS.md`, `.claude/`, `.github/workflows/`,
-  `.github/ISSUE_TEMPLATE/`, `ops/hermes-kanban/` (owned by `factory-steward`, through approved
-  `factory:lesson` issues, ADR 0014).
+  `documenter`), except `docs/specs/` (owned by `spec-writer`; an implementation PR changes only the
+  Status and Delivered by lines of what it delivers). Factory files: `CLAUDE.md`, `AGENTS.md`,
+  `.claude/`, `.github/workflows/`, `.github/ISSUE_TEMPLATE/`, `ops/hermes-kanban/` (owned by
+  `factory-steward`, through approved `factory:lesson` issues, ADR 0014).
 - `context.md` is human-owned intent. Edit it only when the human asks.
 - Never change `wrangler.jsonc` bindings or IDs, deploy, or apply remote D1 migrations unless the
   human explicitly asks.

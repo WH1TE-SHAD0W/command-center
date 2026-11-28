@@ -25,7 +25,7 @@ function sourceFiles(dir: string): string[] {
   });
 }
 
-describe("#10 scaffold the Astro web worker", () => {
+describe("PLT-009 #10 scaffold the Astro web worker", () => {
   it("is an Astro server app on the Cloudflare adapter with Svelte, served on :4321", () => {
     // Read as text: importing the config pulls the adapter into the test's Vite graph.
     const config = read("astro.config.mjs");

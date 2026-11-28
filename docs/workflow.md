@@ -5,7 +5,9 @@
 ## The loop
 
 ```
-Owner: files or approves an issue (with acceptance criteria)
+Owner: decides the behaviour → spec-writer drafts a spec PR in docs/specs/ → owner merges it
+   │
+Owner: files or approves an issue that cites the requirement IDs ("Implements: KIT-005")
    │   "Hermes, work on command-center#N"   (Telegram)
    ▼
 Hermes: reads the issue + AGENTS.md + docs → branch <type>/<N>-<slug>
@@ -35,7 +37,8 @@ Cloudflare Workers Builds deploys main (once connected)
 ## What makes an issue ready for an agent
 
 - Says which module and which ADRs apply.
-- Has acceptance criteria as a checklist, each one testable.
+- Cites requirement IDs from `docs/specs/` that are `accepted` and have no **Open:** line. The
+  acceptance criteria live in the spec (ADR 0015).
 - Names anything explicitly **out of scope**.
 - Leaves no open design choice. If one exists, decide it in the issue first, or say "propose
   options in the PR".

@@ -15,7 +15,7 @@ async function get(app: ReturnType<typeof createApp>, path: string) {
   return app.request(path, { headers: await accessHeaders(env.OAUTH_KV) }, env);
 }
 
-describe("#12 module registry", () => {
+describe("PLT-004 #12 module registry", () => {
   it("AC1: a listed module's routes are mounted", async () => {
     const res = await get(createApp([synthetic]), "/api/synthetic/ping");
     expect(res.status).toBe(200);

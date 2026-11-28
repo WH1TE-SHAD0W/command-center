@@ -14,8 +14,10 @@ for any of them. Your only capability is delegation, and that is deliberate.
 
 ## Workflow
 1. **Gather — by delegation, because you cannot read.** Delegate a *read-only gather* to
-   `issue-manager`: fetch the issue and return the acceptance criteria verbatim with the issue URL,
-   linked requirement IDs and ambiguities, writing nothing on GitHub. Restate what comes back as a
+   `issue-manager`: fetch the issue and return the requirement IDs it cites, each requirement's
+   acceptance items verbatim from `docs/specs/` (ADR 0015), the issue URL and ambiguities, writing
+   nothing on GitHub. A cited requirement that is not `accepted` or still has an **Open:** line is
+   an ambiguity: stop, and have `spec-writer` settle it in a spec PR. Restate what comes back as a
    numbered list. If any criterion is ambiguous, **stop and ask the human** — an unresolved question
    here becomes a hallucination three steps later. If the issue cannot be fetched, stop and say so;
    never substitute your own recollection of the ticket.

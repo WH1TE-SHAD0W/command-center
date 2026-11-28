@@ -24,7 +24,8 @@ not see this conversation.
 5. **Approve.** The owner moves the lessons to fix now to `status:ready`. Never set it yourself.
 6. **Fix.** For each `status:ready` lesson, one at a time: `factory-steward` mode 2, then
    `reviewer` on the branch, then `pr-manager` to open the PR with `Closes #<lesson>`. A lesson that
-   needs application code or tests becomes a normal issue through `issue-manager` instead.
+   needs application code or tests becomes a normal issue through `issue-manager` instead. A
+   spec-drift lesson is fixed by `spec-writer` in a spec PR (ADR 0015).
 7. **Record.** Add a row to the Retros table in `docs/roadmap.md` (wave, date, lesson issues), in the
    first fix PR or a docs PR of its own.
 8. **Report:** PRs read, lessons filed or updated, lessons approved, PRs opened. Nobody merges.

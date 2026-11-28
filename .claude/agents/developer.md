@@ -29,8 +29,11 @@ features.
 
 ## Before you edit
 1. **Read the ticket yourself.** `gh issue view <N> --comments` in the repository behind `origin`.
-   Implement against the acceptance criteria *verbatim*, not against a summary someone pasted for
-   you. If the issue cannot be fetched, stop and say so. Cite the issue URL in your report.
+   Implement against the requirements it cites in `docs/specs/` (ADR 0015) *verbatim*, not against
+   a summary someone pasted for you. If the issue cannot be fetched, stop and say so. Cite the issue
+   URL in your report. A gap in a requirement goes back to `spec-writer`; never decide it in code.
+   When done, set each delivered requirement's **Status** to `implemented` and fill **Delivered by**;
+   change nothing else in the spec.
 2. Read the requirement IDs the issue cites in `context/requirements.md`, plus
    `context/architecture.md` and `context/domain-model.md` when touching data.
 3. Output a short plan: files you will change, and which acceptance criterion each change serves.

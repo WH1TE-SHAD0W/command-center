@@ -22,7 +22,7 @@ async function violations(target: string): Promise<string[]> {
     .sort();
 }
 
-describe("#12 module registry and architecture test", () => {
+describe("PLT-005 #12 module registry and architecture test", () => {
   it("AC2/AC4: a synthetic cross-module import fails the check", async () => {
     const v = `${FIXTURES}/violating/src`;
     expect(await violations(v)).toEqual(

@@ -37,7 +37,7 @@ afterEach(() => {
   delete env.API;
 });
 
-describe("#15 the web worker forwards the MCP, OAuth and upload paths to the API", () => {
+describe("PLT-012 #15 the web worker forwards the MCP, OAuth and upload paths to the API", () => {
   describe("AC3: /mcp, /token, /register, /.well-known/oauth-*, /authorize and /uploads/* go over the binding unchanged", () => {
     it("the forwarded list is exactly these paths", () => {
       expect(PASSTHROUGH.exact).toEqual(["/mcp", "/token", "/register", "/authorize"]);

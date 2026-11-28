@@ -40,7 +40,10 @@ Input: the wave number and the date of the previous retro (from the Retros table
      and only then rule text; name the file;
    - **Existing issue:** the matching `factory:lesson` issue if there is one. A closed one that
      happened again is a **recurrence**: its fix did not hold.
-5. Write nothing to GitHub. Return the drafts; `issue-manager` files them.
+5. **Spec drift** (ADR 0015): list every requirement the wave found missing, wrong or changed
+   (a gap sent back to a spec PR, a reviewer BLOCK on spec match, an implemented requirement whose
+   code changed). Each becomes a draft lesson whose fix is a spec PR by `spec-writer`.
+6. Write nothing to GitHub. Return the drafts; `issue-manager` files them.
 
 ## Mode 2: fix one approved lesson
 Input: one `factory:lesson` issue number with `status:ready` (the owner's approval).

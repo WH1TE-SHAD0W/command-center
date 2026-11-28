@@ -2,7 +2,7 @@ import { env, SELF } from "cloudflare:test";
 import { describe, it, expect } from "vitest";
 import { makeKey, seedJwks, signToken, TEST_TEAM_DOMAIN } from "./helpers/access";
 
-describe("Health check", () => {
+describe("PLT-001 health check", () => {
   it("GET /api/health returns 200 with { ok: true } for a valid Access JWT", async () => {
     // Seed the KV cache so the worker never reaches out for the (synthetic) team's certs.
     const key = await makeKey("health-kid");

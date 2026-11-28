@@ -6,6 +6,7 @@
 |---|---|
 | [architecture.md](architecture.md) | Workers, request flow, repo layout, module pattern, ingest contract, cron |
 | [data-model.md](data-model.md) | D1 tables per module (draft) |
+| [specs/](specs/) | **What each module must do**: one living spec per module, numbered requirements (ADR 0015) |
 | [roadmap.md](roadmap.md) | Every GitHub issue, its dependencies, and what can start now |
 | [workflow.md](workflow.md) | Issues → branches → PRs; the owner merges (agents: see `/AGENTS.md`) |
 | [development.md](development.md) | npm + Wrangler, local dev, tests in workerd, deploys |
@@ -27,5 +28,6 @@
 | [0011](adr/0011-organise-the-api-as-decoupled-modules-in-a-laravel-style-layout.md) | Decoupled modules in a Laravel-style layout | Accepted (M13 open) |
 | [0013](adr/0013-generate-all-drizzle-migrations-into-one-folder.md) | All Drizzle migrations in one folder from one combined schema; one shared Drizzle instance | Accepted |
 | [0014](adr/0014-learn-from-each-roadmap-phase-through-lesson-issues.md) | The factory learns after each roadmap wave: Lessons in every PR, `factory:lesson` issues, a steward agent that opens fix PRs | Accepted |
+| [0015](adr/0015-make-living-module-specs-the-source-of-record-for-behaviour.md) | Living module specs in `docs/specs/` are the source of record for behaviour; spec PR first; CI traceability check | Accepted |
 
 The question-and-answer record behind these decisions: [`context/brainstorm-log.md`](../context/brainstorm-log.md).
