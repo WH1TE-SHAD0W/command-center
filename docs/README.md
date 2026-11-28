@@ -26,5 +26,6 @@
 | [0010](adr/0010-use-drizzle-with-per-module-schemas-and-migrations.md) | Drizzle, with a schema file and a migrations folder per module | Accepted (migrations part superseded by 0013) |
 | [0011](adr/0011-organise-the-api-as-decoupled-modules-in-a-laravel-style-layout.md) | Decoupled modules in a Laravel-style layout | Accepted (M13 open) |
 | [0013](adr/0013-generate-all-drizzle-migrations-into-one-folder.md) | All Drizzle migrations in one folder from one combined schema; one shared Drizzle instance | Accepted |
+| [0014](adr/0014-learn-from-each-roadmap-phase-through-lesson-issues.md) | The factory learns after each roadmap wave: Lessons in every PR, `factory:lesson` issues, a steward agent that opens fix PRs | Accepted |
 
 The question-and-answer record behind these decisions: [`context/brainstorm-log.md`](../context/brainstorm-log.md).

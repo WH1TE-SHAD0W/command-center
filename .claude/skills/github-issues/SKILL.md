@@ -20,6 +20,15 @@ REPO=$(gh repo view --json nameWithOwner -q .nameWithOwner)   # from origin
 | Bug | `<symptom> when <condition>` | `bug.yml` | `type:bug`, `status:*`, `priority:*`, `area:*` |
 | Chore | `<verb> <tooling/docs thing>` | `chore.yml` | `type:chore`, `status:*`, `area:*` |
 
+## Lesson issues (ADR 0014)
+
+Filed by `issue-manager` from a `/retro` run, never by the agent that hit the problem. Labels:
+`factory:lesson` and `status:triage`. Only the owner moves a lesson to `status:ready` (approved to
+fix). Title: the fix, e.g. `Run vitest once in the test scripts`. Body sections: **What happened**
+(where and how often, no personal data), **Cost**, **Proposed fix** (hook > test > CI check > rule
+text; name the file). When a lesson recurs, comment on the existing issue (reopen it if closed)
+instead of filing a new one.
+
 ## Body format (feature)
 
 ```markdown

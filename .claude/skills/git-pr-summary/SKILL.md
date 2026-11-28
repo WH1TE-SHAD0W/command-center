@@ -14,6 +14,8 @@ disable-model-invocation: true
    uses in its web UI; keep the two in sync) and keep it short:
    - **What:** 1–2 sentences. One `Closes #N` line per issue.
    - **Tests:** the actual summary line from `npm test` (run it; never guess).
+   - **Lessons:** what the factory should learn from this branch, or "none" (ADR 0014). Never
+     leave it out; the `/retro` loop reads it.
    - **Checklist:** tick only what you verified.
    - Optional, only if needed: a `## Notes` section of at most 3 bullets (risks, open decisions).
    - End with `🤖 Generated with [Claude Code](https://claude.com/claude-code)`.

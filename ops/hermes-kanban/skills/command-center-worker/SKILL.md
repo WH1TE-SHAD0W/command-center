@@ -28,7 +28,9 @@ On every command-center Kanban card. The card title is `#<issue> <role>: <issue 
    `Refs #<issue>`. Never push (except the pr role), never `wrangler deploy`, never apply remote D1
    migrations, never edit an applied migration, never change `wrangler.jsonc` bindings.
 6. Finish as your section says. Put the facts in the summary: files changed, commands run, the
-   exact test summary line. Never claim something passed without running it.
+   exact test summary line. Never claim something passed without running it. End the summary with
+   `Lessons: <what the factory should learn, or none>` (ADR 0014): retries, unclear rules, tool
+   friction. No personal data.
 
 ## developer
 Implement the criteria in `api/src/`, `api/migrations/`, `web/src/`, `web/worker/` only, following
@@ -62,8 +64,8 @@ Never edit files.
 Follow `.claude/agents/pr-manager.md` and `.claude/skills/git-pr-summary/`.
 1. `git -c credential.helper='!gh auth git-credential' push -u origin HEAD` (never force).
 2. `gh pr create --repo <Repository> --base main --head <branch>` with a body that has
-   `Closes #<issue>`, the tester's summary line and the reviewer's recommendations from the parent
-   results.
+   `Closes #<issue>`, the tester's summary line, the reviewer's recommendations from the parent
+   results, and a `## Lessons` section collecting every card's `Lessons:` line (or "none").
 3. `gh issue edit <issue> --repo <Repository> --add-label status:in-review --remove-label status:in-progress`.
 4. `kanban_complete(summary="<PR URL>", metadata={"published_pr": "<PR URL>"})`. The card only
    completes once the PR's required checks pass; if completion is refused, read

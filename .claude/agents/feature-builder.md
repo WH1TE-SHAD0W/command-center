@@ -39,7 +39,8 @@ for any of them. Your only capability is delegation, and that is deliberate.
    every step ended with a commit.
 8. **Open the PR.** Only after an APPROVE / APPROVE WITH NITS: delegate to `pr-manager` with the
    issue number, branch, base (normally `main`), the tester's exact summary line, the reviewer's
-   recommendation and any nits. It pushes the branch and opens the PR. If it fails, report and stop.
+   recommendation, any nits, and the lessons for the PR's **Lessons** section: retries, review
+   rounds, re-asked questions and tool friction seen in this run (ADR 0014). It pushes the branch and opens the PR. If it fails, report and stop.
 9. **Verify the PR.** Delegate to `pr-reviewer` with the PR number, issue number(s), the tester's
    summary and the reviewer's recommendation. It checks the PR on GitHub and posts one verification
    comment. **The flow ends here** — do not loop back, even on NEEDS CHANGES; the human decides.
