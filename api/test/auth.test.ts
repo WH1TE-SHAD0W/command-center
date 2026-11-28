@@ -36,7 +36,7 @@ async function setup(opts: { keys?: TestKey[]; envOverrides?: Partial<Bindings> 
   return { host, key, app, certs, bindings, request };
 }
 
-describe("#14 Validate the Cloudflare Access JWT on every API request", () => {
+describe("PLT-002 #14 Validate the Cloudflare Access JWT on every API request", () => {
   describe("AC1: a request without Cf-Access-Jwt-Assertion gets 401", () => {
     it("returns 401 with a generic error when the header is missing", async () => {
       const { request, certs } = await setup();
@@ -158,7 +158,7 @@ describe("#14 Validate the Cloudflare Access JWT on every API request", () => {
     });
   });
 
-  describe("AC4: only the ADR 0007 machine paths skip the check", () => {
+  describe("PLT-003 AC4: only the ADR 0007 machine paths skip the check", () => {
     it("the bypass list is exactly the ADR 0007 list", () => {
       expect(ACCESS_BYPASS.exact).toEqual(["/mcp", "/token", "/register"]);
       expect(ACCESS_BYPASS.prefixes).toEqual(["/.well-known/oauth-"]);

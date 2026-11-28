@@ -61,7 +61,7 @@ afterEach(() => {
   vi.restoreAllMocks();
 });
 
-describe("#40 forward the Access JWT from the web worker to the API", () => {
+describe("PLT-011 #40 forward the Access JWT from the web worker to the API", () => {
   describe("AC1: forward the Access assertion unchanged, and nothing else", () => {
     it("forwards the incoming Cf-Access-Jwt-Assertion header unchanged over the binding", async () => {
       const { binding, requests } = stubBinding(accessCheckingApi);

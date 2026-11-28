@@ -10,7 +10,7 @@ const probes = sqliteTable("test_probes", {
   label: text("label").notNull(),
 });
 
-describe("#11 Drizzle and migrations", () => {
+describe("PLT-006 #11 Drizzle and migrations", () => {
   it("AC1: services get one drizzle(env.DB, { schema }) that queries the local D1", async () => {
     const db = createDb(env.DB);
     await env.DB.exec("CREATE TABLE test_probes (id INTEGER PRIMARY KEY, label TEXT NOT NULL)");

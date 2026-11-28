@@ -1,7 +1,7 @@
 import { env } from "cloudflare:test";
 import { describe, expect, it } from "vitest";
 
-describe("#11 Drizzle and migrations", () => {
+describe("PLT-006 #11 Drizzle and migrations", () => {
   it("AC2: every migration in api/migrations/ has drizzle-kit's numbered name, from 0000 without gaps", () => {
     const names = env.TEST_MIGRATIONS.map((m) => m.name);
 

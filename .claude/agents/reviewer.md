@@ -29,6 +29,9 @@ nothing that `CLAUDE.md`, `.claude/rules/` or `context/security-and-privacy.md` 
 
 ## Checklist
 **Acceptance** — every criterion of the issue is implemented *and* has a test (`tester`'s table).
+**Spec match** (ADR 0015) — every requirement the issue cites is delivered, set to `implemented`,
+and named by a test; the code does nothing that no cited requirement asks for; the PR changes no
+requirement text (only Status and Delivered by). BLOCK otherwise.
 **Scope** — files changed stay inside each agent's write scope; no unrelated edits.
 **Security** (`context/security-and-privacy.md`)
 - server-side validation on every new input; parameterised SQL only — no string-built SQL

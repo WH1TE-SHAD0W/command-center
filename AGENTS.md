@@ -8,14 +8,17 @@ conflicts with your own default workflow, **this file wins**.
 1. `context.md`: what the app is and why. §8 lists what is still **undecided**.
 2. `CLAUDE.md`: the architecture rules and boundaries (they apply to every agent, not only Claude).
 3. `docs/README.md`, then the ADRs in `docs/adr/` that touch your task. ADRs are binding.
-4. `docs/architecture.md`: the folder layout and which files belong to a module.
-5. `context/brainstorm-log.md`, only when you need to know *why* a decision was made.
+4. The module's spec in `docs/specs/` and every requirement the issue cites (`Implements: KIT-005`).
+   The requirements are what you build; the issue only sets the scope.
+5. `docs/architecture.md`: the folder layout and which files belong to a module.
+6. `context/brainstorm-log.md`, only when you need to know *why* a decision was made.
 
 ## 1. The owner decides; you implement
 
 - The owner makes **every** design decision, including small ones: names, libraries, table
   columns, enum values, file layout.
-- If the issue or the docs do not settle something you need, **stop and ask**. Do not guess.
+- If the spec, the issue or the docs do not settle something you need, **stop and ask**. Do not
+  guess. A gap in a requirement is fixed by a spec PR (`spec-writer`) before the code.
   Comment on the issue with numbered options and your recommendation, then wait. Example:
   "Q1. Column type for `servings`: a) integer, b) text such as '2–3'. I recommend a."
 - Never change `context.md`, an ADR's decision, or `wrangler.jsonc` bindings or IDs, unless the
@@ -62,7 +65,7 @@ gh issue comment <N> --body "PR: <url>, CI: <green|red, why>"
 ```
 ## Problem        what the issue asks, in one or two sentences
 ## Approach       what you changed and why; files touched
-## Tests          one line per acceptance criterion → the test that proves it; the test summary line
+## Tests          one line per requirement ID → the test that names it; the test summary line
 ## Risk           what could break; migrations generated (yes/no, reviewed?)
 ## Exclusions     what you deliberately did not do
 ## Questions      open points for the owner (or "none")
@@ -100,8 +103,10 @@ npm run migrations:generate -w api && git status --porcelain api/migrations   # 
 npm run build -w web
 ```
 
-- There must be at least one test per acceptance criterion. Quote the real summary line in the PR,
-  and never claim a pass you didn't see.
+- There must be at least one test per requirement the PR delivers, with the ID in its name
+  (`it("KIT-005 AC2: …")`), and the PR sets those requirements to `implemented` in the spec. The
+  spec traceability test fails otherwise. Quote the real summary line in the PR, and never claim a
+  pass you didn't see.
 
 ## 5. The learning loop (ADR 0014)
 

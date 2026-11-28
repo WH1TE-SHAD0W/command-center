@@ -18,12 +18,14 @@ On every command-center Kanban card. The card title is `#<issue> <role>: <issue 
 2. `cd "$HERMES_KANBAN_WORKSPACE"` and check `git branch --show-current` matches the branch in the
    body. Never switch branches.
 3. Read, in this order: `CLAUDE.md`, `context.md` (CLAUDE.md imports it with `@context.md`),
-   `.claude/rules/*.md`, and your persona `.claude/agents/<role>.md` (pr role:
+   `.claude/rules/*.md`, the module's spec in `docs/specs/` (the requirements the issue cites are
+   what you build; ADR 0015), and your persona `.claude/agents/<role>.md` (pr role:
    `.claude/agents/pr-manager.md`). The personas mention Claude Code tools (Agent, Skill); ignore
    those tool names, the rules still apply. A `.claude/skills/<name>/SKILL.md` they point to is a
    file you read.
-4. List the acceptance criteria as numbered items. If any is ambiguous, or the issue is too big for
-   one slice, `kanban_block(kind="needs_input", reason="<the question>")` and stop.
+4. List the cited requirements and their acceptance items. Tests name the requirement ID
+   (`KIT-005 AC2: …`), and the implementation sets its Status to `implemented`. If a requirement is
+   not `accepted`, has an **Open:** line, is ambiguous, or the issue is too big for one slice, `kanban_block(kind="needs_input", reason="<the question>")` and stop.
 5. Do your section below. Commit only your own files with Conventional Commits ending
    `Refs #<issue>`. Never push (except the pr role), never `wrangler deploy`, never apply remote D1
    migrations, never edit an applied migration, never change `wrangler.jsonc` bindings.

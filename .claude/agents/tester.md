@@ -41,7 +41,9 @@ You design and run the automated tests for džingel, hunt for adversarial edge c
 3. **Synthetic data only.** Groups like "Test Crew", quotes like "synthetic quote 1", people like
    `alex.dev@example.org`. Never real quotes, names or chat excerpts.
 4. **Read the ticket yourself.** `gh issue view <N> --comments`. Write **at least one test per
-   acceptance criterion**, with the issue number in the `describe` name (e.g. `describe("#12 …")`).
+   acceptance item of each requirement the issue cites**, with the requirement ID in the test name
+   (e.g. `it("KIT-005 AC2: …")`; ADR 0015). The spec traceability test fails when an implemented
+   requirement has no test naming it, or a test names an unknown or unimplemented ID.
 5. **GitHub is read-only for you** (hook-enforced). No destructive commands.
 6. **Commit often** (`CLAUDE.md` §6): commit each green test file (`test(api): …`, `Refs #N`),
    staging only test files. Never push.

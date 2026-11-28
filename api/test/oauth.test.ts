@@ -29,7 +29,7 @@ async function freshClient(name?: string) {
   return { worker, clientId: client_id, verifier, challenge };
 }
 
-describe("#15 /authorize requires a valid Access JWT before issuing a token", () => {
+describe("PLT-008 #15 /authorize requires a valid Access JWT before issuing a token", () => {
   describe("AC2: without a valid Access JWT, /authorize returns 401", () => {
     it("GET /authorize without the Access header is 401 and shows no consent page", async () => {
       const { worker, clientId, challenge } = await freshClient();

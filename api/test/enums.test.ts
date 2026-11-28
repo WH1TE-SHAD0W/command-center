@@ -3,7 +3,7 @@ import { RecipeType, recipeTypeSchema } from "../src/enums/recipe-type";
 import { RecipeTag, recipeTagSchema } from "../src/enums/recipe-tag";
 
 describe("#16 recipe type and recipe tag enums", () => {
-  it("AC1: RecipeType contains exactly the nine types, in menu order", () => {
+  it("KIT-001 AC1: RecipeType contains exactly the nine types, in menu order", () => {
     expect(Object.values(RecipeType)).toEqual([
       "starter",
       "soup",
@@ -17,7 +17,7 @@ describe("#16 recipe type and recipe tag enums", () => {
     ]);
   });
 
-  it("AC2: RecipeTag contains exactly the agreed tag list", () => {
+  it("KIT-002 AC2: RecipeTag contains exactly the agreed tag list", () => {
     expect(Object.values(RecipeTag)).toEqual([
       "bbq",
       "meat",
@@ -30,23 +30,23 @@ describe("#16 recipe type and recipe tag enums", () => {
     ]);
   });
 
-  it("AC3: recipeTypeSchema accepts every listed type", () => {
+  it("KIT-001 AC3: recipeTypeSchema accepts every listed type", () => {
     for (const type of Object.values(RecipeType)) {
       expect(recipeTypeSchema.parse(type)).toBe(type);
     }
   });
 
-  it("AC3: recipeTypeSchema rejects a value not in the list", () => {
+  it("KIT-001 AC3: recipeTypeSchema rejects a value not in the list", () => {
     expect(recipeTypeSchema.safeParse("appetizer").success).toBe(false);
   });
 
-  it("AC3: recipeTagSchema accepts every listed tag", () => {
+  it("KIT-002 AC3: recipeTagSchema accepts every listed tag", () => {
     for (const tag of Object.values(RecipeTag)) {
       expect(recipeTagSchema.parse(tag)).toBe(tag);
     }
   });
 
-  it("AC3: recipeTagSchema rejects a value not in the list", () => {
+  it("KIT-002 AC3: recipeTagSchema rejects a value not in the list", () => {
     expect(recipeTagSchema.safeParse("sunday dish").success).toBe(false);
   });
 });
