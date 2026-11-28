@@ -44,12 +44,106 @@ while your branch had one, drop yours (`npx -w api drizzle-kit drop`) and genera
 - One test per acceptance criterion; synthetic data only.
 
 ## Deploys
-- Cloudflare Workers Builds is connected to this repo. On push to `main`:
-  - `command-center-api` (root `api/`): apply remote D1 migrations, then `wrangler deploy`.
-  - `command-center` (root `web/`): `astro build`, then `wrangler deploy`.
-- GitHub Actions (`.github/workflows/ci.yml`): `npm ci`, typecheck, tests, web build. It holds no
-  Cloudflare secrets.
-- Secrets and vars (`CLOUDFLARE_ACCESS_AUD`, `CLOUDFLARE_ACCESS_TEAM_DOMAIN`, the optional
-  `OAUTH_CONSENT_SECRET` of 32+ characters that lets `/authorize` remember approvals, the alert
-  channel token) go in with `wrangler secret put`, never in the repo. The team domain is the host, such as
-  `<team>.cloudflareaccess.com` (`https://` and a trailing slash are accepted).
+
+Cloudflare Workers Builds deploys both workers on every push to `main`. GitHub Actions only verifies
+(typecheck, tests, web build) and holds no Cloudflare secrets. Each workspace has a `deploy` script
+(`npm run deploy -w api`, `npm run deploy -w web`) that runs `wrangler deploy` with that worker's
+own config. Only Workers Builds runs it; no agent and no CI job ever does.
+
+- `api`: `wrangler deploy` bundles `src/worker.ts` with `api/wrangler.jsonc`.
+- `web`: `astro build` writes the worker to `web/dist/server/` with a generated
+  `dist/server/wrangler.json`, plus a redirect in `web/.wrangler/deploy/config.json`. A plain
+  `wrangler deploy` in `web/` follows that redirect and ships the build output, so the script passes
+  no `--config` (that would deploy the unbuilt source config instead).
+
+Neither worker has a public address of its own: both set `workers_dev: false` and
+`preview_urls: false` (no `*.workers.dev` URL, no Version URLs). The only way in is the custom domain
+behind Cloudflare Access; the API is reachable only through the web worker's service binding.
+
+### Owner checklist: first deploy
+
+The owner does every step below; agents never create resources, deploy or apply remote migrations.
+Do them in this order.
+
+**1. Create the resources** (dashboard, or `npx wrangler …` from `api/`), then put their IDs in
+`api/wrangler.jsonc`. Only replace the values named here; the `binding` names (`DB`, `FILES`,
+`OAUTH_KV`) are what the code reads (`env.DB`, …) and must not change.
+
+| Resource | Create with | In `api/wrangler.jsonc`, replace |
+|---|---|---|
+| D1 database | `npx wrangler d1 create <name>` | `d1_databases[0].database_name` (`command-center-db-local`) and `database_id` (`placeholder-d1-id`) |
+| R2 bucket (private, ADR 0008) | `npx wrangler r2 bucket create <name>` | `r2_buckets[0].bucket_name` (`command-center-files-local`); R2 has no ID |
+| KV namespace (OAuth state and the Access key cache) | `npx wrangler kv namespace create OAUTH_KV` | `kv_namespaces[0].id` (`placeholder-kv-id`) |
+
+Commit that change through a PR like any other. The web worker binds no resources, only `API`
+(the service binding to `command-center-api`) and `ASSETS`.
+
+**2. Apply the D1 migrations to the remote database** (manual and reviewed, never part of a build):
+review the SQL in `api/migrations/` that is not yet applied, then from `api/`:
+```
+npx wrangler d1 migrations list DB --remote    # what is pending
+npx wrangler d1 migrations apply DB --remote
+```
+Repeat this before merging any later PR that adds a migration, so the code that needs a table never
+reaches production before the table does.
+
+**3. Connect the API worker to Workers Builds first** (Workers & Pages → Create → Import a
+repository, or the worker's Settings → Build). The service binding needs `command-center-api` to
+exist, so let its first build succeed before connecting the web worker.
+
+| Setting | `command-center-api` | `command-center` |
+|---|---|---|
+| Worker name | `command-center-api` (must match `name` in `wrangler.jsonc`) | `command-center` |
+| Root directory | `api` | `web` |
+| Build command | `cd .. && npm ci` | `cd .. && npm ci && npm run build -w web` |
+| Deploy command | `npm run deploy` | `npm run deploy` |
+| Production branch (Branch control) | `main` | `main` |
+| Enable Preview Builds | off | off |
+| Build variables | `SKIP_DEPENDENCY_INSTALL=1` | `SKIP_DEPENDENCY_INSTALL=1` |
+
+The repository is an npm workspace with one `package-lock.json` at the top, and the Workers Builds
+docs do not say whether their automatic install finds it when the root directory is `api/` or `web/`.
+The build commands therefore run `npm ci` from the repository root themselves, and
+`SKIP_DEPENDENCY_INSTALL=1` turns the automatic install off so nothing is installed twice. Because
+this monorepo behaviour is undocumented, read each worker's first build log once: it should show no
+automatic install step and exactly one `npm ci`, run at the repository root. Build variables exist
+only during the build, not at runtime.
+
+**4. Set the API's Access variables** on `command-center-api`:
+- `CLOUDFLARE_ACCESS_TEAM_DOMAIN`: the team host, such as `<team>.cloudflareaccess.com` (`https://`
+  and a trailing slash are accepted).
+- `CLOUDFLARE_ACCESS_AUD`: the Application Audience (AUD) tag of the Access application from step 5.
+
+Neither value is a secret, but neither belongs in this public repository. Two ways to set them:
+- **As secrets** (survive every deploy): from `api/`, `npx wrangler secret put CLOUDFLARE_ACCESS_TEAM_DOMAIN`
+  and `npx wrangler secret put CLOUDFLARE_ACCESS_AUD`, or Settings → Variables and Secrets → type
+  *Secret*. Each `secret put` deploys a new version immediately.
+- **As plaintext variables** in Settings → Variables and Secrets. `wrangler deploy` treats
+  `wrangler.jsonc` as the source of truth and **deletes dashboard variables** on the next deploy
+  unless `api/wrangler.jsonc` sets `"keep_vars": true`, so this option needs that line first.
+
+Without both values every request except the ADR 0007 machine paths fails closed with
+`500 {"error":"authentication is not configured"}`.
+
+Optionally also set `OAUTH_CONSENT_SECRET` (32+ characters) as a secret on `command-center-api`. It
+lets `/authorize` remember an approval; until it is set, the consent page shows on every
+authorization (#15).
+
+**5. Create the Access application before attaching the custom domain** (Zero Trust → Access →
+Applications → Self-hosted, domain `app.culak.eu`):
+- An *Allow* policy for the owner's identity only.
+- A *Bypass* policy for exactly the ADR 0007 machine paths, where the OAuth token or the one-time
+  token is the authentication: `/mcp`, `/token`, `/register`, `/.well-known/oauth-*` and
+  `/uploads/*`. `/authorize` is **not** bypassed: it stays behind Access, so getting a token needs
+  the owner's Access login.
+- Copy the application's AUD tag into `CLOUDFLARE_ACCESS_AUD` (step 4).
+
+**6. Connect the web worker** to Workers Builds with the settings in step 3, let its first build
+succeed, and only then attach `app.culak.eu` as its custom domain (Settings → Domains & Routes). With
+Access already in place the domain is never reachable without it.
+
+### Every later deploy
+- Merging to `main` builds and deploys both workers. Keep API changes backward compatible with the
+  web worker that is live, because the two builds run independently.
+- A PR that adds a migration: apply it remotely (step 2) before merging.
+- Rollback: Workers & Pages → the worker → Deployments. Rolling back code does not roll back D1 data.

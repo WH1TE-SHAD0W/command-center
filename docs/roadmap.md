@@ -4,16 +4,16 @@
 > and what can start now. The issues are the source of record: this page only arranges them. The
 > edges come from each issue's **Notes → Depends on** line, and the same edges are set as GitHub's
 > native "blocked by" links. Where an issue gives no dependency, none is drawn and no order is
-> invented. Snapshot taken 2026-11-27, after the owner's decisions of that day (recorded as comments
-> on each issue).
+> invented. Snapshot taken 2026-11-28. The owner's decisions are recorded as comments on each issue.
 
 ## Where things stand
 
 | State | Meaning | Issues |
 |---|---|---|
-| **Done** | closed | #9 |
-| **Startable** | every dependency is closed and every decision is made | #10, #11, #12, #14, #16 |
-| **Locked** | at least one dependency is still open | #13, #15, #17–#24 |
+| **Done** | closed (merged) | #9, #10, #11, #12, #14, #16 |
+| **In progress** | a session is building it | #13, #15, #17, #36, #40, #42 |
+| **Unblocked, needs your decision** | every dependency is closed, but a **Decision needed** is open | #41 |
+| **Locked** | at least one dependency is still open | #18–#24 |
 | **Design pending** | on hold until UI design issues exist, even once unlocked | #25, #26 |
 | **Not broken down** | the original module tickets; no child issues yet | #1, #2, #3, #4, #5 |
 | **Idea, not decided** | needs its open questions answered (and maybe an ADR) | #7, #28, #29, #30, #31, #32 |
@@ -24,17 +24,22 @@
 flowchart LR
   classDef done fill:#14532d,stroke:#22c55e,color:#fff
   classDef ready fill:#1e3a8a,stroke:#60a5fa,color:#fff
+  classDef decide fill:#713f12,stroke:#facc15,color:#fff
   classDef design fill:#3b0764,stroke:#c084fc,color:#fff
   classDef locked fill:#27272a,stroke:#71717a,color:#d4d4d8
 
   subgraph E0["Foundation"]
     I9["#9 npm workspace + API health"]
     I10["#10 Astro web worker + binding"]
-    I11["#11 Drizzle + migrations collector"]
+    I11["#11 Drizzle, one migrations folder"]
     I12["#12 Module registry + architecture test"]
     I13["#13 CI: typecheck, tests, build"]
     I14["#14 Access JWT check"]
     I15["#15 MCP at /mcp with OAuth"]
+    I36["#36 API on Wrangler 4"]
+    I40["#40 Web forwards the Access JWT"]
+    I41["#41 Dev bypass + actor mapping"]
+    I42["#42 Workers Builds deploy prep"]
   end
 
   subgraph K["Kitchen, epic #6"]
@@ -54,6 +59,9 @@ flowchart LR
   I9 --> I10 & I11 & I12 & I14 & I16
   I10 & I11 & I12 --> I13
   I10 & I14 --> I15
+  I10 & I11 & I12 & I14 --> I36
+  I10 & I14 --> I40 & I42
+  I14 --> I41
   I11 & I16 --> I17
   I17 --> I18 --> I19
   I17 --> I20
@@ -63,9 +71,10 @@ flowchart LR
   I21 & I10 --> I25
   I21 & I24 --> I26
 
-  class I9 done
-  class I10,I11,I12,I14,I16 ready
-  class I13,I15,I17,I18,I19,I20,I21,I22,I23,I24 locked
+  class I9,I10,I11,I12,I14,I16 done
+  class I13,I15,I17,I36,I40,I42 ready
+  class I41 decide
+  class I18,I19,I20,I21,I22,I23,I24 locked
   class I25,I26 design
 ```
 
@@ -77,8 +86,8 @@ wave can run in parallel. This is dependency depth only, not a priority you have
 | Wave | Issues | Unblocked by |
 |---|---|---|
 | 0 | #9 ✅ | — |
-| 1 | #10, #11, #12, #14, #16 | #9 |
-| 2 | #13, #15, #17 | #13 ← #10 #11 #12 · #15 ← #10 #14 · #17 ← #11 #16 |
+| 1 | #10 ✅, #11 ✅, #12 ✅, #14 ✅, #16 ✅ | #9 |
+| 2 | #13, #15, #17, #36, #40, #41, #42 | #13 ← #10 #11 #12 · #15 ← #10 #14 · #17 ← #11 #16 · #36 ← #10 #11 #12 #14 · #40, #42 ← #10 #14 · #41 ← #14 |
 | 3 | #18, #20, #23 | #17 (and #15 for #23) |
 | 4 | #19, #24 | #18 · #23 |
 | 5 | #21, #22 | #18 #19 #20, plus #14 (#21) or #15 (#22) |
@@ -87,8 +96,8 @@ wave can run in parallel. This is dependency depth only, not a priority you have
 **Critical path to the kitchen API:** #11 → #17 → #18 → #19 → #21 / #22, with the photo chain
 #14 → #15 → #23 → #24 beside it. The pages #25 and #26 also wait for UI design.
 
-**Parallel caution:** #10, #11 and #12 all add dependencies, so running them at the same time
-will probably conflict in `package-lock.json`. Whoever merges second rebases.
+**Parallel caution:** parallel PRs conflict in `package-lock.json` and shared files. Each branch
+merges `main` in (no rebase, no force-push) before it is merged.
 
 ## Every issue
 
@@ -97,18 +106,22 @@ will probably conflict in `package-lock.json`. Whoever merges second rebases.
 | # | Issue | Depends on | Built by | Decisions |
 |---|---|---|---|---|
 | 9 | Scaffold the npm workspace and the API worker with a health route | — | — | ✅ closed |
-| 10 | Scaffold the Astro web worker with the service binding to the API | #9 | Hermes | none (`status:ready`) |
-| 11 | Set up Drizzle and the migrations collector | #9 | Hermes | none (`status:ready`) |
-| 12 | Add the module registry and the architecture test | #9 | Hermes | none (`status:ready`) |
+| 10 | Scaffold the Astro web worker with the service binding to the API | #9 | Claude Code | ✅ merged (#37): no SESSION/IMAGES bindings; Svelte installed only |
+| 11 | Set up Drizzle (one shared migrations folder, ADR 0013) | #9 | Claude Code | ✅ merged (#38): no collector, no `d1-migrations/` |
+| 12 | Add the module registry and the architecture test | #9 | Claude Code | ✅ merged (#35): routes only, tools left to #15 |
 | 13 | Add GitHub Actions for typecheck, tests and build | #9 #10 #11 #12 | Hermes | none listed |
-| 14 | Validate the Cloudflare Access JWT on every API request | #9 | Claude Code / you | `CLOUDFLARE_ACCESS_TEAM_DOMAIN`, `CLOUDFLARE_ACCESS_AUD` |
+| 14 | Validate the Cloudflare Access JWT on every API request | #9 | Claude Code | ✅ merged (#39): `CLOUDFLARE_ACCESS_TEAM_DOMAIN`, `CLOUDFLARE_ACCESS_AUD`; JWKS cached in `OAUTH_KV` |
 | 15 | Serve the MCP server at /mcp with workers-oauth-provider | #10 #14 | Claude Code / you | none listed |
+| 36 | Upgrade the API worker to Wrangler 4 | #10 #11 #12 #14 | Claude Code | split out of #10 |
+| 40 | Forward the Access JWT from the web worker to the API | #10 #14 | Claude Code | none listed |
+| 41 | Add the local dev bypass and actor mapping to the Access check | #14 | Claude Code / you | **open**: how the bypass is switched on; the `actor` shape |
+| 42 | Prepare the repository for Cloudflare Workers Builds deploys | #10 #14 | Claude Code | remote D1 migrations stay manual |
 
 ### Kitchen (epic #6)
 
 | # | Issue | Depends on | Built by | Decisions |
 |---|---|---|---|---|
-| 16 | Add the recipe type and recipe tag enums | #9 | Hermes | tags: bbq, meat, sweet, slovak, sunday dish, saturday dish, friday dish, wednesday dish (extendable; value format proposed in the PR); type order = menu order |
+| 16 | Add the recipe type and recipe tag enums | #9 | Claude Code | ✅ merged (#34), kebab-case values; tags: bbq, meat, sweet, slovak, sunday dish, saturday dish, friday dish, wednesday dish (extendable); type order = menu order |
 | 17 | Add the kitchen schema and its first migration | #11 #16 | Hermes | text UUID id; `amount` optional number ("to taste" goes in `note`); `steps` as `string[]`; `servings` optional |
 | 18 | Create recipes with a duplicate check that ignores case and accents | #17 | Hermes | an archived recipe does not block the same name (same-name variants will exist later) |
 | 19 | Update and archive recipes | #18 | Hermes | unarchive allowed; duplicate check on unarchive proposed in the PR |

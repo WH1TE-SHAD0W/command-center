@@ -37,7 +37,7 @@ afterEach(() => {
 describe("#10 the index page calls /api/health over the binding", () => {
   it("calls GET /api/health through the API binding with the typed client", async () => {
     const { binding, requests } = stubBinding(healthy);
-    expect(await getApiHealth(binding)).toEqual({ ok: true });
+    expect(await getApiHealth(binding, new Request("https://app.test/"))).toEqual({ ok: true });
     expect(requests).toHaveLength(1);
     expect(requests[0].method).toBe("GET");
     expect(new URL(requests[0].url).pathname).toBe("/api/health");
@@ -45,7 +45,7 @@ describe("#10 the index page calls /api/health over the binding", () => {
 
   it("reports an error when the API answers with a non-2xx status", async () => {
     const { binding } = stubBinding(() => new Response("unavailable", { status: 503 }));
-    expect(await getApiHealth(binding)).toEqual({
+    expect(await getApiHealth(binding, new Request("https://app.test/"))).toEqual({
       ok: false,
       error: "The API answered with status 503.",
     });
@@ -53,7 +53,7 @@ describe("#10 the index page calls /api/health over the binding", () => {
 
   it("reports an error when the API says it is not ok", async () => {
     const { binding } = stubBinding(() => Response.json({ ok: false }));
-    expect(await getApiHealth(binding)).toEqual({
+    expect(await getApiHealth(binding, new Request("https://app.test/"))).toEqual({
       ok: false,
       error: "The API reported it is not ok.",
     });
@@ -63,7 +63,7 @@ describe("#10 the index page calls /api/health over the binding", () => {
     const { binding } = stubBinding(() => {
       throw new Error("synthetic binding failure");
     });
-    expect(await getApiHealth(binding)).toEqual({
+    expect(await getApiHealth(binding, new Request("https://app.test/"))).toEqual({
       ok: false,
       error: "The API could not be reached.",
     });

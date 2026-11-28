@@ -3,7 +3,8 @@ import { env } from "cloudflare:workers";
 import Base from "../layouts/Base.astro";
 import { getApiHealth } from "../lib/api";
 
-const health = await getApiHealth(env.API);
+// Forwards the incoming request's Access assertion to the API (#40).
+const health = await getApiHealth(env.API, Astro.request);
 ---
 
 <Base title="Dashboard">
